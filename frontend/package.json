@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build": "vue-tsc -b && npm run typecheck:preview && vite build",
+    "preview": "vite preview",
+    "typecheck:preview": "tsc --project tsconfig.preview.json"
   },
   "dependencies": {
     "axios": "^1.17.0",
