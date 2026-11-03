@@ -1,6 +1,6 @@
 import { ArrowUpRight, Gauge, Users } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import { formatDailyRate, transmissionLabel, type PreviewCar } from '../../cars';
+import { formatDailyRate, type PreviewCar, transmissionLabel } from '../../cars';
 import { carCardStyles as s } from './car-card.styles';
 
 type CarCardProps = { car: PreviewCar; onSelect: (car: PreviewCar) => void; index: number };

@@ -6,3 +6,5 @@
 - `mustang.jpg`: https://images.unsplash.com/photo-1494976388531-d1058494cdd8.
 
 Car photographs are illustrative, not records of the rental fleet. Verify the photograph pages, authors and applicable license before the portfolio release. Model specifications and prices are sample preview data.
+
+- `meeting-room.jpg`: illustrative office interior from https://images.unsplash.com/photo-1497366754035-f200968a6e72 (downloaded at 1200px for the RoomBook mini landing). Not a photograph of a listed room.

@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react';
 import {
   ArrowDown,
   ArrowUpRight,
@@ -11,7 +10,8 @@ import {
   X
 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import { formatDailyRate, previewCars, transmissionLabel, type PreviewCar } from '../../cars';
+import { useRef, useState } from 'react';
+import { formatDailyRate, type PreviewCar, previewCars, transmissionLabel } from '../../cars';
 import { CarCard } from '../car-card';
 import { catalogStyles as s } from './catalog.styles';
 
@@ -172,7 +172,8 @@ export function Catalog() {
               </p>
             </div>
             <div className={s.controls}>
-              <div className={s.filters} role="group" aria-label="Skrzynia biegów">
+              <fieldset className={s.filters}>
+                <legend className="sr-only">Skrzynia biegów</legend>
                 {filters.map(filter => (
                   <button
                     key={filter.value}
@@ -184,7 +185,7 @@ export function Catalog() {
                     {filter.label}
                   </button>
                 ))}
-              </div>
+              </fieldset>
               <label>
                 <span className="sr-only">Sortowanie samochodów</span>
                 <select

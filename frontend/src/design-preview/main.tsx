@@ -1,6 +1,6 @@
+import { MotionConfig } from 'motion/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MotionConfig } from 'motion/react';
 import { Catalog } from './components/catalog';
 import './styles/app.css';
 

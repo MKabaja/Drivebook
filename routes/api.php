@@ -8,14 +8,13 @@ use App\Http\Controllers\RoomController;
 
 use Illuminate\Support\Facades\Route;
 
-// Auth routes
-
 Route::controller(AuthController::class)->group(function () {
-    Route::post('/register', 'register');
-    Route::post('/login', 'login');
+    Route::post('/register', 'register')->middleware('throttle:register');
+    Route::post('/login', 'login')->middleware('throttle:login');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/rooms', [RoomController::class, 'index']);
 
