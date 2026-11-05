@@ -22,7 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-docs/
+/docs/
 
 # Frontend
 frontend/node_modules/
@@ -31,3 +31,9 @@ frontend/dist-ssr/
 frontend/*.local
 frontend/.env
 frontend/.vite/
+
+# Lokalne połączenia agentów z claude-config (symlinki per komputer)
+.claude/settings.local.json
+.agents/
+.ai/
+CLAUDE.local.md
