@@ -8,24 +8,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('cars', function (Blueprint $table): void {
             $table->id();
             $table->string('name', 100);
-            $table->unsignedTinyInteger('capacity');
+            $table->unsignedTinyInteger('seats');
+            $table->string('transmission', 20);
+            $table->string('category', 20);
+            $table->unsignedInteger('daily_rate_in_grosze');
+            $table->string('image_path');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('cars');
     }
 };

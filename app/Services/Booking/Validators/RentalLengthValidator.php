@@ -6,22 +6,19 @@ namespace App\Services\Booking\Validators;
 
 use App\DataTransferObjects\BookingData;
 use App\Services\Booking\Contracts\BookingValidatorInterface;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\ValidationException;
 
-final class FutureDateValidator implements BookingValidatorInterface
+final class RentalLengthValidator implements BookingValidatorInterface
 {
     public function validate(BookingData $data): void
     {
-        if ($this->hasConflict($data)) {
+        $maxRentalDays = Config::integer('rental.max_rental_days');
+
+        if ($data->startsOn->addDays($maxRentalDays)->toDateString() < $data->endsOn->toDateString()) {
             throw ValidationException::withMessages([
-                'starts_at' => 'The start time cannot be in the past.',
+                'ends_on' => "A rental can last at most {$maxRentalDays} days.",
             ]);
         }
-    }
-
-    private function hasConflict(BookingData $data): bool
-    {
-
-        return $data->startsAt->isPast();
     }
 }

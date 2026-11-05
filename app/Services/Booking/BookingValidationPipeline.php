@@ -9,8 +9,8 @@ use App\Services\Booking\Contracts\BookingValidatorInterface;
 
 final class BookingValidationPipeline
 {
-    /** @param BookingValidatorInterface[] $validators */
-    public function __construct(private array $validators) {}
+    /** @param list<BookingValidatorInterface> $validators */
+    public function __construct(private readonly array $validators) {}
 
     public function validate(BookingData $data): void
     {

@@ -27,7 +27,6 @@ test('registration starts a session and returns only public user fields', functi
         'data' => ['id' => $user->id, 'name' => 'Jan Kowalski', 'email' => 'jan@example.com'],
     ]);
     $this->assertAuthenticatedAs($user, 'web');
-    $this->assertDatabaseCount('personal_access_tokens', 0);
     expect(Hash::check('password123', $user->password))->toBeTrue();
 });
 
@@ -67,7 +66,6 @@ test('login starts a session and returns only public user fields', function () {
     ]);
 
     $this->assertAuthenticatedAs($user, 'web');
-    $this->assertDatabaseCount('personal_access_tokens', 0);
     expect(session()->getId())->not->toBe($previousSessionId);
 });
 
@@ -159,4 +157,10 @@ test('registration attempts are rate limited', function () {
     }
 
     $this->postJson('/api/register')->assertTooManyRequests();
+});
+
+test('bearer tokens are ignored by the session-only API', function () {
+    $this->withHeader('Authorization', 'Bearer 1|abc')
+        ->getJson('/api/user')
+        ->assertUnauthorized();
 });

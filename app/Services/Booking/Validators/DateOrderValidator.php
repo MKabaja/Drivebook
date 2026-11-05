@@ -12,15 +12,10 @@ final class DateOrderValidator implements BookingValidatorInterface
 {
     public function validate(BookingData $data): void
     {
-        if ($this->hasConflict($data)) {
+        if ($data->endsOn->toDateString() <= $data->startsOn->toDateString()) {
             throw ValidationException::withMessages([
-                'ends_at' => 'The end time must be after the start time.',
+                'ends_on' => 'Return date must be after pickup date.',
             ]);
         }
-    }
-
-    private function hasConflict(BookingData $data): bool
-    {
-        return $data->endsAt->isBefore($data->startsAt);
     }
 }

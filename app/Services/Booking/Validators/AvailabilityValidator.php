@@ -13,19 +13,16 @@ final class AvailabilityValidator implements BookingValidatorInterface
 {
     public function validate(BookingData $data): void
     {
-        if ($this->hasConflict($data)) {
+        $isBooked = Booking::query()
+            ->where('car_id', $data->carId)
+            ->active()
+            ->overlapping($data->startsOn, $data->endsOn)
+            ->exists();
+
+        if ($isBooked) {
             throw ValidationException::withMessages([
-                'starts_at' => 'This reservation overlaps with an existing booking.',
+                'starts_on' => 'This car is already booked for the selected dates.',
             ]);
         }
-    }
-
-    private function hasConflict(BookingData $data): bool
-    {
-        return Booking::where('room_id', $data->roomId)
-            ->active()
-            ->overlapping($data->startsAt, $data->endsAt)
-            ->lockForUpdate()
-            ->exists();
     }
 }

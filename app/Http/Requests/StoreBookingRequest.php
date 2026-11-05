@@ -14,16 +14,14 @@ class StoreBookingRequest extends FormRequest
         return true;
     }
 
-    /**
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
+    /** @return array<string, ValidationRule|array<mixed>|string> */
     public function rules(): array
     {
         return [
-            'room_id' => ['required', 'integer', 'exists:rooms,id'],
-            'starts_at' => ['required', 'date', 'after:now'],
-            'ends_at' => ['required', 'date', 'after:starts_at'],
-            'participants_count' => ['required', 'integer', 'min:1'],
+            'car_id' => ['required', 'integer', 'exists:cars,id'],
+            'starts_on' => ['required', 'date_format:Y-m-d'],
+            'ends_on' => ['required', 'date_format:Y-m-d', 'after:starts_on'],
+            'expected_daily_rate_in_grosze' => ['required', 'integer', 'min:1'],
         ];
     }
 }

@@ -5,23 +5,25 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\BookingStatus;
+use Carbon\CarbonImmutable;
 use Database\Factories\BookingFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @property int $id
- * @property int $room_id
+ * @property int $car_id
  * @property int $user_id
- * @property Carbon $starts_at
- * @property Carbon $ends_at
- * @property int $participants_count
+ * @property CarbonImmutable $starts_on
+ * @property CarbonImmutable $ends_on
  * @property BookingStatus $status
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property int $daily_rate_in_grosze
+ * @property int $total_price_in_grosze
+ * @property CarbonImmutable $created_at
+ * @property CarbonImmutable $updated_at
  */
 class Booking extends Model
 {
@@ -30,12 +32,8 @@ class Booking extends Model
 
     /** @var list<string> */
     protected $fillable = [
-        'room_id',
-        'user_id',
-        'starts_at',
-        'ends_at',
-        'participants_count',
-        'status',
+        'car_id', 'user_id', 'starts_on', 'ends_on', 'status',
+        'daily_rate_in_grosze', 'total_price_in_grosze',
     ];
 
     /** @return BelongsTo<User, $this> */
@@ -44,24 +42,41 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    /** @return BelongsTo<Room, $this> */
-    public function room(): BelongsTo
+    /** @return BelongsTo<Car, $this> */
+    public function car(): BelongsTo
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(Car::class);
     }
 
     /** @param Builder<Booking> $query */
     public function scopeActive(Builder $query): void
     {
-        $query->where('status', '!=', BookingStatus::Cancelled);
+        $query->where('status', BookingStatus::Confirmed);
     }
 
-    /**
-     * @param  Builder<Booking>  $query
-     */
-    public function scopeOverlapping(Builder $query, Carbon $start, Carbon $end): void
+    /** @param Builder<Booking> $query */
+    public function scopeOverlapping(Builder $query, CarbonImmutable $start, CarbonImmutable $end): void
     {
-        $query->where('starts_at', '<', $end)->where('ends_at', '>', $start);
+        $query->where('starts_on', '<', $end->toDateString())
+            ->where('ends_on', '>', $start->toDateString());
+    }
+
+    public function pickupAt(): CarbonImmutable
+    {
+        return CarbonImmutable::parse(
+            $this->starts_on->toDateString().' '.Config::string('rental.pickup_time'),
+            Config::string('rental.timezone'),
+        );
+    }
+
+    public function canCancel(CarbonImmutable $now): bool
+    {
+        return $this->status === BookingStatus::Confirmed && $now->isBefore($this->pickupAt());
+    }
+
+    public function rentalDays(): int
+    {
+        return (int) $this->starts_on->diffInDays($this->ends_on);
     }
 
     /** @return array<string, string> */
@@ -69,9 +84,12 @@ class Booking extends Model
     {
         return [
             'status' => BookingStatus::class,
-            'starts_at' => 'datetime',
-            'ends_at' => 'datetime',
-            'participants_count' => 'integer',
+            'starts_on' => 'immutable_date',
+            'ends_on' => 'immutable_date',
+            'daily_rate_in_grosze' => 'integer',
+            'total_price_in_grosze' => 'integer',
+            'created_at' => 'immutable_datetime',
+            'updated_at' => 'immutable_datetime',
         ];
     }
 }
