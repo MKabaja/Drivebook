@@ -30,3 +30,15 @@ test('users see only their own rental history with resource pagination', functio
     expect($response->json('data.*.id'))->toEqualCanonicalizing($bookings->modelKeys());
     expect($response->json('data.0'))->not->toHaveKey('user_id');
 });
+
+test('booked car is embedded without rental quote fields', function () {
+    $this->travelTo(new DateTimeImmutable('2030-06-01 12:00:00 Europe/Warsaw'));
+    $user = User::factory()->create();
+    Booking::factory()->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user, 'sanctum')->getJson('/api/bookings');
+
+    $response->assertOk();
+    expect(array_keys($response->json('data.0.car')))
+        ->toEqualCanonicalizing(['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path']);
+});

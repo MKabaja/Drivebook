@@ -8,10 +8,19 @@ use App\Models\Car;
 
 final readonly class CarViewData
 {
-    public function __construct(
+    private function __construct(
         public Car $car,
-        public ?RentalQuote $quote = null,
-        public ?bool $availability = null,
-        public ?RentalQuote $alternativeDates = null,
+        public ?RentalQuote $quote,
+        public ?bool $isAvailable,
     ) {}
+
+    public static function withoutPeriod(Car $car): self
+    {
+        return new self($car, null, null);
+    }
+
+    public static function forPeriod(Car $car, RentalQuote $quote, bool $isAvailable): self
+    {
+        return new self($car, $quote, $isAvailable);
+    }
 }

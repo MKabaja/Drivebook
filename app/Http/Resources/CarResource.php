@@ -19,17 +19,26 @@ class CarResource extends JsonResource
     public function toArray(Request $request): array
     {
         $car = $this->view->car;
+        $quote = $this->view->quote;
 
-        return [
+        $fields = [
             'id' => $car->id,
             'name' => $car->name,
             'seats' => $car->seats,
             'transmission' => $car->transmission->value,
+            'category' => $car->category->value,
             'daily_rate_in_grosze' => $car->daily_rate_in_grosze,
             'image_path' => $car->image_path,
-            'quote' => $this->view->quote?->toArray(),
-            'availability' => $this->view->availability,
-            'alternative_dates' => $this->view->alternativeDates?->toArray(),
+        ];
+
+        if ($quote === null) {
+            return $fields;
+        }
+
+        return [
+            ...$fields,
+            'quote' => $quote->toArray(),
+            'is_available' => $this->view->isAvailable,
         ];
     }
 }
