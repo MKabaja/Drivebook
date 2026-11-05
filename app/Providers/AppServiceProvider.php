@@ -10,6 +10,7 @@ use App\Services\Booking\Validators\DateOrderValidator;
 use App\Services\Booking\Validators\PickupDateValidator;
 use App\Services\Booking\Validators\RentalLengthValidator;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -23,10 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(BookingValidationPipeline::class, fn (): BookingValidationPipeline => new BookingValidationPipeline([
+        $this->app->singleton(BookingValidationPipeline::class, fn (Application $app): BookingValidationPipeline => new BookingValidationPipeline([
             new DateOrderValidator,
-            new PickupDateValidator,
-            new RentalLengthValidator,
+            $app->make(PickupDateValidator::class),
+            $app->make(RentalLengthValidator::class),
             new AvailabilityValidator,
         ]));
     }

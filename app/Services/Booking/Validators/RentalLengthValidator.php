@@ -6,19 +6,19 @@ namespace App\Services\Booking\Validators;
 
 use App\DataTransferObjects\BookingData;
 use App\Services\Booking\Contracts\BookingValidatorInterface;
-use Illuminate\Support\Facades\Config;
+use App\Services\Cars\RentalWindow;
 use Illuminate\Validation\ValidationException;
 
 final class RentalLengthValidator implements BookingValidatorInterface
 {
+    public function __construct(private readonly RentalWindow $rentalWindow) {}
+
     public function validate(BookingData $data): void
     {
-        $maxRentalDays = Config::integer('rental.max_rental_days');
+        $violation = $this->rentalWindow->lengthViolation($data->startsOn, $data->endsOn);
 
-        if ($data->startsOn->addDays($maxRentalDays)->toDateString() < $data->endsOn->toDateString()) {
-            throw ValidationException::withMessages([
-                'ends_on' => "A rental can last at most {$maxRentalDays} days.",
-            ]);
+        if ($violation !== null) {
+            throw ValidationException::withMessages(['ends_on' => $violation]);
         }
     }
 }
