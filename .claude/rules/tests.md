@@ -32,6 +32,8 @@ Co i ile testować: skill `test-strategy`. Jak pisać: `testing-laravel` (backen
 
 - Testujemy logikę: czyste funkcje z `lib/`, przepływy (422/409/401, anulowanie, wybór alternatywy, brak auto-retry POST), atrybuty dostępności, renderowanie warunkowe.
 - Nie testujemy: klas Tailwinda, animacji Motion, wnętrza bibliotek, każdego komponentu UI.
-- `fetch` stubowany na granicy (`vi.stubGlobal`), odpowiedzi budowane fabrykami z `test/factories/`, zgodnymi ze schematem Zod (jeden test „factory satisfies schema” na fabrykę).
+- Sieć na granicy przez MSW (`src/test/msw/`): domyślne handlery dla gościa i CSRF, w teście tylko `server.use(...)` dla endpointu, którego dotyczy przypadek; nieobsłużone żądanie = błąd testu. `vi.stubGlobal('fetch')` tylko w testach samego `shared/api/backend.ts`.
+- Odpowiedzi z fabryk `src/test/factories/<res>.factory.ts` (`makeX(overrides)`), zgodnych ze schematem Zod (jeden test „factory satisfies schema” na fabrykę); koperty przez `src/test/msw/envelopes.ts`. Ekran z routerem renderuj przez `renderApp(path)`.
+- Liczbę żądań sprawdzaj tylko, gdy jest regułą (brak podwójnego POST, sesja bez ponownego `/api/user`) — licznikiem w handlerze, nie przez `mock.calls`.
 - Zapytania `screen.getByRole`, `userEvent`, `await findBy…`; bez dostępu przez `container`.
 - Fixture'y i nazwy testów po angielsku.

@@ -53,7 +53,7 @@ src/
 
 - Deklaracje `function` (także komponenty i helpery). Stepdown: eksportowane API na górze, prywatne helpery pod spodem.
 - Eksporty nazwane w jednym `export { … }` na końcu pliku; `export default` tylko w configach narzędzi. Bez barreli `index.ts`.
-- Importy przez alias `@/`; typy przez `import type`.
+- Importy przez alias `@/`; wyjątek: pliki z tego samego folderu (`./<name>.styles`). Typy przez `import type`.
 - `type`, nie `interface`. Bez `any`, nieuzasadnionych `as`, `!`, `@ts-ignore`. Złożone typy jako nazwane aliasy.
 - Stan powiązanych flag jako discriminated union (`{ status: 'idle' } | { status: 'submitting' } | { status: 'error'; message }`), zamiast `switch` — `Record<Stan, Handler>`. Bez zagnieżdżonych ternary.
 - 0–2 argumenty (max 3, potem obiekt), bez argumentów flagowych, guard clauses. Czas przekazywany jako argument (`today: string`), nie `new Date()` w logice.
@@ -61,7 +61,7 @@ src/
 - Hook tylko, gdy potrzebuje stanu, efektu lub kontekstu; inaczej funkcja w `lib/`. Hook ma nazwany typ zwracany.
 - Komponent > ~150 linii lub z kilkoma odpowiedzialnościami → podziel na części w `components/`.
 - Bez komentarzy w kodzie. TSDoc tylko na eksportowanym, reużywalnym API (skill `tsdoc`, po polsku), o tym, czego nie widać w sygnaturze.
-- Teksty UI po polsku, w komponentach lub `*.constants.ts` — bez i18n.
+- Teksty UI po angielsku (etykiety, komunikaty, dane demo), w komponentach lub `*.constants.ts` — bez i18n.
 - Każdy ekran obsługuje loading (`pendingComponent`), error (`errorComponent`), empty i 404 (`notFound()`).
 - Dostępność: semantyczny HTML, `<label>` dla pól, focus po nawigacji/akcji nie ląduje na `<body>`, komunikaty statusu przez `role="status"`/`aria-live`. Jeden link na kartę (cała karta klikalna przez pseudo-element).
 - Nie remontuj stron kluczem `key={JSON.stringify(search)}` — stan formularza wyprowadzaj z URL.
