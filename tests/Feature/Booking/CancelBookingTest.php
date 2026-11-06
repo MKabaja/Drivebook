@@ -51,3 +51,9 @@ test('a rental cannot be cancelled twice', function () {
 
     $this->assertDatabaseHas('bookings', ['id' => $booking->id, 'status' => 'cancelled']);
 });
+
+test('cancelling an unknown rental returns 404', function () {
+    $this->actingAs(User::factory()->create(), 'sanctum')->patchJson('/api/bookings/999999/cancel')
+        ->assertNotFound()
+        ->assertExactJson(['message' => 'Booking not found.']);
+});

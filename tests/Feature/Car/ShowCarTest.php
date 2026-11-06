@@ -146,7 +146,15 @@ test('proposal never exceeds the booking horizon', function (string $bookingEnd,
 ]);
 
 test('unknown car returns 404', function () {
-    $this->getJson('/api/cars/999999')->assertNotFound();
+    $this->getJson('/api/cars/999999')
+        ->assertNotFound()
+        ->assertExactJson(['message' => 'Car not found.']);
+});
+
+test('unknown route keeps the default 404', function () {
+    $this->getJson('/api/unknown-endpoint')
+        ->assertNotFound()
+        ->assertJsonMissing(['message' => 'Car not found.']);
 });
 
 test('car details validate dates like the search', function () {

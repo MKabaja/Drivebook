@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 final class AuthService
 {
@@ -20,7 +20,7 @@ final class AuthService
         ]);
     }
 
-    /** @throws AuthenticationException when the email or password is wrong */
+    /** @throws ValidationException when the email or password is wrong */
     public function authenticate(string $email, #[\SensitiveParameter] string $password): User
     {
         $credentials = ['email' => $email, 'password' => $password];
@@ -30,7 +30,7 @@ final class AuthService
         $user = $guard->getLastAttempted();
 
         if (! $isValid || ! $user instanceof User) {
-            throw new AuthenticationException('Invalid credentials');
+            throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
         $guard->getProvider()->rehashPasswordIfRequired($user, $credentials);

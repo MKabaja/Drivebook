@@ -69,16 +69,21 @@ test('login starts a session and returns only public user fields', function () {
     expect(session()->getId())->not->toBe($previousSessionId);
 });
 
-test('wrong credentials do not authenticate the user', function () {
-    $user = User::factory()->create();
+test('wrong credentials do not authenticate the user', function (string $email, string $password) {
+    User::factory()->create(['email' => 'jan@example.com']);
 
     $this->postJson('/api/login', [
-        'email' => $user->email,
-        'password' => 'wrongpassword',
-    ])->assertUnauthorized()->assertJsonPath('message', 'Invalid credentials');
+        'email' => $email,
+        'password' => $password,
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors(['email' => 'These credentials do not match our records.'])
+        ->assertJsonMissingValidationErrors(['password']);
 
     $this->assertGuest('web');
-});
+})->with([
+    'wrong password' => ['jan@example.com', 'wrongpassword'],
+    'unknown email' => ['unknown@example.com', 'password'],
+]);
 
 test('current user requires authentication', function () {
     $this->getJson('/api/user')->assertUnauthorized();
@@ -142,7 +147,7 @@ test('login attempts are rate limited', function () {
         $this->postJson('/api/login', [
             'email' => 'unknown@example.com',
             'password' => 'wrongpassword',
-        ])->assertUnauthorized();
+        ])->assertUnprocessable();
     }
 
     $this->postJson('/api/login', [
