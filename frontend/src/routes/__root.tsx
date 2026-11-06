@@ -1,16 +1,20 @@
-import { createRootRoute } from '@tanstack/react-router';
-import { Layout } from '../app/layout';
-import { fetchCurrentUser } from '../features/auth/api';
+import { createRootRouteWithContext } from '@tanstack/react-router';
+
+import { RootLayout } from '@/app/layouts/root-layout';
+import type { Session } from '@/features/auth/api/session.api';
 import {
 	NotFoundPage,
 	RouteError,
 	RoutePending,
-} from '../shared/components/route-feedback';
-export const Route = createRootRoute({
-	beforeLoad: async ({ abortController }) => ({
-		user: await fetchCurrentUser(abortController.signal),
+} from '@/shared/components/route-feedback/route-feedback';
+
+type RouterContext = { session: Session };
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+	beforeLoad: async ({ context, abortController }) => ({
+		user: await context.session.loadUser(abortController.signal),
 	}),
-	component: Layout,
+	component: RootLayout,
 	pendingComponent: RoutePending,
 	errorComponent: RouteError,
 	notFoundComponent: NotFoundPage,

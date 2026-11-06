@@ -1,4 +1,4 @@
-import { fileURLToPath, URL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
@@ -9,16 +9,6 @@ export default defineConfig({
 		react(),
 		tailwindcss(),
 	],
-	build: {
-		rollupOptions: {
-			input: {
-				app: fileURLToPath(new URL('./index.html', import.meta.url)),
-				preview: fileURLToPath(
-					new URL('./design-preview.html', import.meta.url),
-				),
-			},
-		},
-	},
 	resolve: {
 		alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
 	},

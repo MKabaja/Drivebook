@@ -6,9 +6,9 @@ export const uiStyles = {
 	lead: 'mt-4 max-w-2xl text-base leading-7 text-muted',
 	panel: 'rounded-2xl border border-line bg-panel p-5 sm:p-7',
 	primary:
-		'inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-accent px-6 text-sm font-semibold text-canvas transition-colors hover:bg-copy disabled:cursor-wait disabled:opacity-60',
+		'inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-accent px-6 text-sm font-semibold text-canvas transition-colors hover:bg-copy disabled:cursor-wait disabled:opacity-60 aria-disabled:cursor-wait aria-disabled:opacity-60',
 	secondary:
-		'inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-control px-5 text-sm font-medium text-copy transition-colors hover:border-accent hover:text-accent disabled:cursor-wait disabled:opacity-60',
+		'inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-control px-5 text-sm font-medium text-copy transition-colors hover:border-accent hover:text-accent disabled:cursor-wait disabled:opacity-60 aria-disabled:cursor-wait aria-disabled:opacity-60',
 	input:
 		'mt-2 min-h-12 w-full rounded-xl border border-control bg-canvas px-4 py-3 text-copy aria-invalid:border-error',
 	label: 'block text-sm font-medium text-copy',
