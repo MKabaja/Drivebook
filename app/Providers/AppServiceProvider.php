@@ -7,14 +7,15 @@ namespace App\Providers;
 use App\Services\Booking\BookingValidationPipeline;
 use App\Services\Booking\Validators\AvailabilityValidator;
 use App\Services\Booking\Validators\DateOrderValidator;
-use App\Services\Booking\Validators\FutureDateValidator;
-use App\Services\Booking\Validators\RoomCapacityValidator;
-
+use App\Services\Booking\Validators\PickupDateValidator;
+use App\Services\Booking\Validators\RentalLengthValidator;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,14 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(BookingValidationPipeline::class, function ($app) {
-            return new BookingValidationPipeline([
-                new DateOrderValidator,
-                new FutureDateValidator,
-                new RoomCapacityValidator,
-                new AvailabilityValidator,
-            ]);
-        });
+        $this->app->singleton(BookingValidationPipeline::class, fn (Application $app): BookingValidationPipeline => new BookingValidationPipeline([
+            new DateOrderValidator,
+            $app->make(PickupDateValidator::class),
+            $app->make(RentalLengthValidator::class),
+            new AvailabilityValidator,
+        ]));
     }
 
     /**
@@ -38,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // The SPA authenticates with the session only; bearer tokens are never looked up.
+        Sanctum::getAccessTokenFromRequestUsing(static fn (): ?string => null);
+
         RateLimiter::for('login', function (Request $request): Limit {
             $email = $request->input('email');
             $email = is_string($email) ? Str::lower($email) : '';

@@ -5,26 +5,33 @@ declare(strict_types=1);
 namespace App\DataTransferObjects;
 
 use App\Http\Requests\StoreBookingRequest;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Config;
 
+/**
+ * Dates at midnight in `rental.timezone`, `endsOn` exclusive; `expectedDailyRateInGrosze` is the rate the customer saw.
+ */
 final readonly class BookingData
 {
     public function __construct(
-        public int $roomId,
+        public int $carId,
         public int $userId,
-        public Carbon $startsAt,
-        public Carbon $endsAt,
-        public int $participantsCount,
+        public CarbonImmutable $startsOn,
+        public CarbonImmutable $endsOn,
+        public int $expectedDailyRateInGrosze,
     ) {}
 
     public static function fromRequest(StoreBookingRequest $request, int $userId): self
     {
+        $payload = $request->safe();
+        $timezone = Config::string('rental.timezone');
+
         return new self(
-            roomId: (int) $request->validated('room_id'),
+            carId: $payload->integer('car_id'),
             userId: $userId,
-            startsAt: Carbon::parse($request->validated('starts_at')),
-            endsAt: Carbon::parse($request->validated('ends_at')),
-            participantsCount: (int) $request->validated('participants_count'),
+            startsOn: CarbonImmutable::parse($payload->string('starts_on')->toString(), $timezone)->startOfDay(),
+            endsOn: CarbonImmutable::parse($payload->string('ends_on')->toString(), $timezone)->startOfDay(),
+            expectedDailyRateInGrosze: $payload->integer('expected_daily_rate_in_grosze'),
         );
     }
 }
