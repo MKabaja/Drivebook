@@ -10,7 +10,8 @@
     "typecheck": "tsc --project tsconfig.app.json && tsc --project tsconfig.node.json",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm test && vite build"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.170.46",
