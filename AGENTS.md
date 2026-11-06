@@ -9,7 +9,7 @@ Celowo bez: TanStack Query, axios, Redux/Zustand, React Hook Form, shadcn, cn/cl
 
 ## Komendy
 
-Backend przez Sail (`./vendor/bin/sail up -d`). Systemowe PHP 8.3 nie spełnia `^8.5` — nie uruchamiaj `php`/`composer` poza kontenerem.
+Backend przez Sail (`./vendor/bin/sail up -d`): testy, analiza i lint tylko w kontenerze (MySQL i `.env` Saila). Lokalne PHP, jeśli jest, służy wyłącznie narzędziom IDE.
 
 - `./vendor/bin/sail composer lint` — Pint, **zapisuje pliki**; kontrola bez zapisu: `./vendor/bin/sail php vendor/bin/pint --test`
 - `./vendor/bin/sail composer analyse` — Larastan
