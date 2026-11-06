@@ -7,6 +7,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { createSession } from '@/features/auth/api/session.api';
+
 import { routeTree } from '@/routeTree.gen';
 
 /**

@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { NetworkError } from '@/shared/api/network-error';
 import { describeError } from '@/shared/lib/describe-error';
+
 import { makeHttpError } from '@/test/factories/http-error.factory';
 
 const GENERIC_MESSAGE = 'Something went wrong. Try again in a moment.';

@@ -1,6 +1,7 @@
 import { HttpResponse, http } from 'msw';
 
 import type { User } from '@/features/auth/model/user.schemas';
+
 import { resource } from '@/test/msw/envelopes';
 
 /**

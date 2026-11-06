@@ -1,6 +1,9 @@
 import { Link, useRouteContext, useRouter } from '@tanstack/react-router';
 import { ArrowRight, LockKeyhole } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
+
+import { Field } from '@/shared/components/field/field';
+import { uiStyles } from '@/shared/components/ui.styles';
 import { login, register } from '@/features/auth/api/auth.api';
 import {
 	type AuthFormError,
@@ -12,8 +15,6 @@ import {
 	copyByAuthMode,
 } from '@/features/auth/model/auth.constants';
 import type { User } from '@/features/auth/model/user.schemas';
-import { Field } from '@/shared/components/field/field';
-import { uiStyles } from '@/shared/components/ui.styles';
 
 import { authPageStyles } from './auth-page.styles';
 

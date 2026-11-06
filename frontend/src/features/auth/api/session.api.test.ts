@@ -2,6 +2,7 @@ import { HttpResponse, http } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { createSession } from '@/features/auth/api/session.api';
+
 import { makeUser } from '@/test/factories/user.factory';
 import { resource } from '@/test/msw/envelopes';
 import { signedInAs } from '@/test/msw/handlers';

@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { toAuthFormError } from '@/features/auth/lib/to-auth-form-error';
 import { HttpError } from '@/shared/api/http-error';
 import { describeError } from '@/shared/lib/describe-error';
+import { toAuthFormError } from '@/features/auth/lib/to-auth-form-error';
+
 import {
 	makeHttpError,
 	makeValidationError,

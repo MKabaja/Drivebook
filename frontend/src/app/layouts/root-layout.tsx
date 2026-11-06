@@ -1,7 +1,8 @@
 import { Link, Outlet, useRouteContext } from '@tanstack/react-router';
 import { CarFront } from 'lucide-react';
-import { SignOutButton } from '@/features/auth/components/sign-out-button/sign-out-button';
+
 import { uiStyles } from '@/shared/components/ui.styles';
+import { SignOutButton } from '@/features/auth/components/sign-out-button/sign-out-button';
 
 import { rootLayoutStyles } from './root-layout.styles';
 

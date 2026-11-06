@@ -1,12 +1,12 @@
+import { backend } from '@/shared/api/backend';
+import { resourceOf } from '@/shared/api/envelopes';
+import { HttpError } from '@/shared/api/http-error';
 import {
 	type Credentials,
 	type Registration,
 	type User,
 	userSchema,
 } from '@/features/auth/model/user.schemas';
-import { backend } from '@/shared/api/backend';
-import { resourceOf } from '@/shared/api/envelopes';
-import { HttpError } from '@/shared/api/http-error';
 
 const userResourceSchema = resourceOf(userSchema);
 

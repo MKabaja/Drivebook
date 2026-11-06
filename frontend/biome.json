@@ -1,12 +1,337 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "files": {
-    "includes": ["src/**", "*.ts", "*.json", "!src/routeTree.gen.ts"]
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "root": ".."
   },
-  "formatter": { "indentStyle": "tab", "indentWidth": 2, "lineEnding": "lf" },
-  "javascript": { "formatter": { "quoteStyle": "single" } },
-  "json": { "formatter": { "indentStyle": "space" } },
-  "css": { "parser": { "tailwindDirectives": true } },
-  "linter": { "enabled": true, "rules": { "preset": "recommended" } },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } }
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!dist", "!src/routeTree.gen.ts"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab",
+    "indentWidth": 2,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "json": {
+    "formatter": {
+      "indentStyle": "space"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "domains": {
+      "react": "recommended"
+    },
+    "rules": {
+      "preset": "recommended",
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "error"
+      },
+      "performance": {
+        "noBarrelFile": "error"
+      },
+      "style": {
+        "noDefaultExport": "error",
+        "noNestedTernary": "error",
+        "noNonNullAssertion": "error",
+        "noParameterProperties": "error",
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "type"
+          }
+        },
+        "useExportsLast": "error",
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "filenameCases": ["kebab-case"],
+            "requireAscii": true
+          }
+        },
+        "useImportType": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              {
+                "group": ["../**"],
+                "message": "Import through the @/ alias instead of ../."
+              }
+            ]
+          }
+        }
+      },
+      "nursery": {
+        "useConsistentFunctionStyle": {
+          "level": "error",
+          "options": {
+            "style": "declaration"
+          }
+        }
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":NODE:",
+              ":BLANK_LINE:",
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              "@/app/**",
+              "@/shared/**",
+              "@/features/**",
+              ":BLANK_LINE:",
+              ":PATH:"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["*.config.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/routes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/shared/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Import through the @/ alias instead of ../."
+                  },
+                  {
+                    "group": ["@/app/**", "@/routes/**", "@/features/**"],
+                    "message": "shared/ knows nothing about app/, routes/ or features/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/auth/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Import through the @/ alias instead of ../."
+                  },
+                  {
+                    "group": ["@/app/**", "@/routes/**"],
+                    "message": "features/ does not import app/ or routes/."
+                  },
+                  {
+                    "group": ["@/shared/api/backend"],
+                    "message": "Only api/ calls backend; components get data from loaders or props."
+                  },
+                  {
+                    "group": [
+                      "@/features/*/**",
+                      "!@/features/*/model/**",
+                      "!@/features/*/api/**",
+                      "!@/features/auth/**"
+                    ],
+                    "message": "Another feature is reachable only through its model/ and api/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/bookings/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Import through the @/ alias instead of ../."
+                  },
+                  {
+                    "group": ["@/app/**", "@/routes/**"],
+                    "message": "features/ does not import app/ or routes/."
+                  },
+                  {
+                    "group": ["@/shared/api/backend"],
+                    "message": "Only api/ calls backend; components get data from loaders or props."
+                  },
+                  {
+                    "group": [
+                      "@/features/*/**",
+                      "!@/features/*/model/**",
+                      "!@/features/*/api/**",
+                      "!@/features/bookings/**"
+                    ],
+                    "message": "Another feature is reachable only through its model/ and api/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/cars/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Import through the @/ alias instead of ../."
+                  },
+                  {
+                    "group": ["@/app/**", "@/routes/**"],
+                    "message": "features/ does not import app/ or routes/."
+                  },
+                  {
+                    "group": ["@/shared/api/backend"],
+                    "message": "Only api/ calls backend; components get data from loaders or props."
+                  },
+                  {
+                    "group": [
+                      "@/features/*/**",
+                      "!@/features/*/model/**",
+                      "!@/features/*/api/**",
+                      "!@/features/cars/**"
+                    ],
+                    "message": "Another feature is reachable only through its model/ and api/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/landing/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Import through the @/ alias instead of ../."
+                  },
+                  {
+                    "group": ["@/app/**", "@/routes/**"],
+                    "message": "features/ does not import app/ or routes/."
+                  },
+                  {
+                    "group": ["@/shared/api/backend"],
+                    "message": "Only api/ calls backend; components get data from loaders or props."
+                  },
+                  {
+                    "group": [
+                      "@/features/*/**",
+                      "!@/features/*/model/**",
+                      "!@/features/*/api/**",
+                      "!@/features/landing/**"
+                    ],
+                    "message": "Another feature is reachable only through its model/ and api/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/*/api/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Import through the @/ alias instead of ../."
+                  },
+                  {
+                    "group": ["@/app/**", "@/routes/**"],
+                    "message": "features/ does not import app/ or routes/."
+                  },
+                  {
+                    "group": [
+                      "@/features/*/components/**",
+                      "@/features/*/lib/**",
+                      "@/features/*/pages/**"
+                    ],
+                    "message": "api/ uses only backend and model/."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

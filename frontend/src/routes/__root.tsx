@@ -1,12 +1,12 @@
 import { createRootRouteWithContext } from '@tanstack/react-router';
 
 import { RootLayout } from '@/app/layouts/root-layout';
-import type { Session } from '@/features/auth/api/session.api';
 import {
 	NotFoundPage,
 	RouteError,
 	RoutePending,
 } from '@/shared/components/route-feedback/route-feedback';
+import type { Session } from '@/features/auth/api/session.api';
 
 type RouterContext = { session: Session };
 

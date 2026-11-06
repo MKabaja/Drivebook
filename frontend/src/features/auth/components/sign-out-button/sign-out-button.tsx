@@ -1,9 +1,10 @@
 import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
-import { logout } from '@/features/auth/api/auth.api';
+
 import { uiStyles } from '@/shared/components/ui.styles';
 import { describeError } from '@/shared/lib/describe-error';
+import { logout } from '@/features/auth/api/auth.api';
 
 type SignOutState =
 	| { status: 'idle' }
