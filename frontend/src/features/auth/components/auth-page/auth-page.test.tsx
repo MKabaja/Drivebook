@@ -103,6 +103,9 @@ describe('login', () => {
 		expect(button).toHaveAttribute('aria-disabled', 'true');
 		expect(button).toHaveTextContent('One moment…');
 		expect(loginRequests).toBe(1);
+
+		response.resolve();
+		await screen.findByRole('button', { name: 'Sign out' });
 	});
 
 	it('fetches the CSRF cookie before sending the credentials', async () => {
