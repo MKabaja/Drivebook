@@ -8,9 +8,9 @@ const root = document.getElementById('root');
 if (!root) throw new Error('Missing application root');
 
 createRoot(root).render(
-  <StrictMode>
-    <MotionConfig reducedMotion="user">
-      <Catalog />
-    </MotionConfig>
-  </StrictMode>
+	<StrictMode>
+		<MotionConfig reducedMotion="user">
+			<Catalog />
+		</MotionConfig>
+	</StrictMode>,
 );

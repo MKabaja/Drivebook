@@ -1,13 +1,13 @@
 @theme {
-  --font-sans: "Inter", "Segoe UI", sans-serif;
-  --color-canvas: #101310;
-  --color-panel: #191e19;
-  --color-copy: #f3f5ed;
-  --color-muted: #b4beaf;
-  --color-accent: #d6f56b;
-  --color-line: #363f35;
-  --color-control: #7b8875;
+	--font-sans: "Inter", "Segoe UI", sans-serif;
+	--color-canvas: #101310;
+	--color-panel: #191e19;
+	--color-copy: #f3f5ed;
+	--color-muted: #b4beaf;
+	--color-accent: #d6f56b;
+	--color-line: #363f35;
+	--color-control: #7b8875;
 }
 @theme {
-  --color-error: #ffaaa3;
+	--color-error: #ffaaa3;
 }

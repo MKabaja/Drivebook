@@ -8,9 +8,9 @@ import './styles/app.css';
 const root = document.getElementById('app');
 if (!root) throw new Error('Missing application root');
 createRoot(root).render(
-  <StrictMode>
-    <MotionConfig reducedMotion="user">
-      <RouterProvider router={router} />
-    </MotionConfig>
-  </StrictMode>
+	<StrictMode>
+		<MotionConfig reducedMotion="user">
+			<RouterProvider router={router} />
+		</MotionConfig>
+	</StrictMode>,
 );
