@@ -105,6 +105,27 @@ describe('login', () => {
 		expect(loginRequests).toBe(1);
 	});
 
+	it('fetches the CSRF cookie before sending the credentials', async () => {
+		const calls: string[] = [];
+		server.use(
+			http.get('/sanctum/csrf-cookie', () => {
+				calls.push('csrf');
+				return new HttpResponse(null, { status: 204 });
+			}),
+			http.post('/api/login', () => {
+				calls.push('login');
+				return HttpResponse.json(resource(makeUser()));
+			}),
+		);
+		const { user } = renderApp('/login');
+
+		await fillCredentials(user);
+		await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+		await screen.findByRole('button', { name: 'Sign out' });
+		expect(calls).toEqual(['csrf', 'login']);
+	});
+
 	async function fillCredentials(
 		user: ReturnType<typeof renderApp>['user'],
 	): Promise<void> {
@@ -137,6 +158,40 @@ describe('registration', () => {
 			message,
 		);
 	});
+
+	it('fetches the CSRF cookie and sends the registration form, then shows the user', async () => {
+		const calls: string[] = [];
+		let body: unknown;
+		server.use(
+			http.get('/sanctum/csrf-cookie', () => {
+				calls.push('csrf');
+				return new HttpResponse(null, { status: 204 });
+			}),
+			http.post('/api/register', async ({ request }) => {
+				calls.push('register');
+				body = await request.json();
+				return HttpResponse.json(resource(makeUser({ name: 'Demo Driver' })), {
+					status: 201,
+				});
+			}),
+		);
+		const { user } = renderApp('/register');
+
+		await user.type(await screen.findByLabelText('Full name'), 'Demo Driver');
+		await user.type(screen.getByLabelText('Email address'), EMAIL);
+		await user.type(screen.getByLabelText('Password'), PASSWORD);
+		await user.type(screen.getByLabelText('Confirm password'), PASSWORD);
+		await user.click(screen.getByRole('button', { name: 'Create account' }));
+
+		expect(await screen.findByText('Demo Driver')).toBeInTheDocument();
+		expect(calls).toEqual(['csrf', 'register']);
+		expect(body).toEqual({
+			name: 'Demo Driver',
+			email: EMAIL,
+			password: PASSWORD,
+			password_confirmation: PASSWORD,
+		});
+	});
 });
 
 describe('sign out', () => {
@@ -162,5 +217,24 @@ describe('sign out', () => {
 		).toBeInTheDocument();
 		expect(screen.queryByText('Anna Driver')).not.toBeInTheDocument();
 		expect(userRequestsAfterLogout).toBe(0);
+	});
+
+	it('shows the guest header when the session has already ended (401)', async () => {
+		server.use(signedInAs(makeUser({ name: 'Anna Driver' })));
+		server.use(
+			http.post('/api/logout', () =>
+				HttpResponse.json({ message: 'Unauthenticated.' }, { status: 401 }),
+			),
+		);
+		const { user } = renderApp('/');
+		await screen.findByText('Anna Driver');
+
+		await user.click(screen.getByRole('button', { name: 'Sign out' }));
+
+		expect(
+			await screen.findByRole('link', { name: 'Sign in' }),
+		).toBeInTheDocument();
+		expect(screen.queryByText('Anna Driver')).not.toBeInTheDocument();
+		expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 	});
 });
