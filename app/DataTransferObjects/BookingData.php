@@ -8,6 +8,9 @@ use App\Http\Requests\StoreBookingRequest;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Config;
 
+/**
+ * Dates at midnight in `rental.timezone`, `endsOn` exclusive; `expectedDailyRateInGrosze` is the rate the customer saw.
+ */
 final readonly class BookingData
 {
     public function __construct(
@@ -21,12 +24,13 @@ final readonly class BookingData
     public static function fromRequest(StoreBookingRequest $request, int $userId): self
     {
         $payload = $request->safe();
+        $timezone = Config::string('rental.timezone');
 
         return new self(
             carId: $payload->integer('car_id'),
             userId: $userId,
-            startsOn: CarbonImmutable::parse($payload->string('starts_on')->toString(), Config::string('rental.timezone'))->startOfDay(),
-            endsOn: CarbonImmutable::parse($payload->string('ends_on')->toString(), Config::string('rental.timezone'))->startOfDay(),
+            startsOn: CarbonImmutable::parse($payload->string('starts_on')->toString(), $timezone)->startOfDay(),
+            endsOn: CarbonImmutable::parse($payload->string('ends_on')->toString(), $timezone)->startOfDay(),
             expectedDailyRateInGrosze: $payload->integer('expected_daily_rate_in_grosze'),
         );
     }

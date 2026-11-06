@@ -20,6 +20,7 @@ final class AuthService
         ]);
     }
 
+    /** @throws AuthenticationException when the email or password is wrong */
     public function authenticate(string $email, #[\SensitiveParameter] string $password): User
     {
         $credentials = ['email' => $email, 'password' => $password];

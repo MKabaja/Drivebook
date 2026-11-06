@@ -6,6 +6,9 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
+/**
+ * Rendered as HTTP 409 in `bootstrap/app.php`.
+ */
 final class DailyRateChanged extends RuntimeException
 {
     public function __construct()

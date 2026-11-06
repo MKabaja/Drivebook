@@ -7,12 +7,16 @@ namespace App\DataTransferObjects;
 use App\Enums\Transmission;
 use App\Http\Requests\SearchCarsRequest;
 
+/**
+ * A `null` filter is skipped; with `dates` only cars free on them are returned.
+ */
 final readonly class SearchCarsData
 {
     public function __construct(
-        public ?RentalPeriod $period = null,
+        public ?RentalDates $dates = null,
         public ?int $minimumSeats = null,
         public ?Transmission $transmission = null,
+        /** @var positive-int */
         public int $page = 1,
     ) {}
 
@@ -21,7 +25,7 @@ final readonly class SearchCarsData
         $payload = $request->safe();
 
         return new self(
-            period: RentalPeriod::fromRequest($request),
+            dates: RentalDates::fromRequest($request),
             minimumSeats: $payload->has('seats') ? $payload->integer('seats') : null,
             transmission: $payload->enum('transmission', Transmission::class),
             page: $payload->integer('page', 1),

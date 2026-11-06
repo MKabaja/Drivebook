@@ -52,7 +52,7 @@ test('booking confirms the selected car with an integer price snapshot', functio
         ->assertJsonPath('data.0.total_price_in_grosze', 31998);
 });
 
-test('a changed displayed rate requires a new quote and creates no booking', function () {
+test('a changed displayed rate requires a new price check and creates no booking', function () {
     $car = Car::factory()->create(['daily_rate_in_grosze' => 20000]);
 
     $this->actingAs(User::factory()->create(), 'sanctum')

@@ -48,13 +48,17 @@ class Booking extends Model
         return $this->belongsTo(Car::class);
     }
 
-    /** @param Builder<Booking> $query */
+    /** @param  Builder<Booking>  $query */
     public function scopeActive(Builder $query): void
     {
         $query->where('status', BookingStatus::Confirmed);
     }
 
-    /** @param Builder<Booking> $query */
+    /**
+     * Half-open `[$start, $end)`: bookings that only touch the range do not overlap.
+     *
+     * @param  Builder<Booking>  $query
+     */
     public function scopeOverlapping(Builder $query, CarbonImmutable $start, CarbonImmutable $end): void
     {
         $query->where('starts_on', '<', $end->toDateString())

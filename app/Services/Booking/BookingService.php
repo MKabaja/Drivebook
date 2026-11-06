@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Booking;
 
 use App\DataTransferObjects\BookingData;
+use App\DataTransferObjects\RentalDates;
 use App\Enums\BookingStatus;
 use App\Exceptions\DailyRateChanged;
 use App\Models\Booking;
@@ -24,6 +25,10 @@ final class BookingService
         private readonly RentalPricing $pricing,
     ) {}
 
+    /**
+     * @throws ValidationException when the dates break a booking rule or overlap a booking
+     * @throws DailyRateChanged when the car rate differs from `expectedDailyRateInGrosze`
+     */
     public function store(BookingData $data): Booking
     {
         return DB::transaction(function () use ($data): Booking {
@@ -34,21 +39,23 @@ final class BookingService
                 throw new DailyRateChanged;
             }
 
-            $quote = $this->pricing->quote($data->startsOn, $data->endsOn, $car->daily_rate_in_grosze);
+            $rentalDates = new RentalDates($data->startsOn, $data->endsOn);
+            $price = $this->pricing->priceFor($rentalDates, $car->daily_rate_in_grosze);
             $booking = Booking::create([
                 'car_id' => $car->id,
                 'user_id' => $data->userId,
                 'starts_on' => $data->startsOn->toDateString(),
                 'ends_on' => $data->endsOn->toDateString(),
                 'status' => BookingStatus::Confirmed,
-                'daily_rate_in_grosze' => $quote->dailyRateInGrosze,
-                'total_price_in_grosze' => $quote->totalPriceInGrosze,
+                'daily_rate_in_grosze' => $price->dailyRateInGrosze,
+                'total_price_in_grosze' => $price->totalPriceInGrosze,
             ]);
 
             return $booking->load('car');
         });
     }
 
+    /** @throws ValidationException when already cancelled or past the pickup time */
     public function cancel(Booking $booking): Booking
     {
         return DB::transaction(function () use ($booking): Booking {
@@ -72,6 +79,11 @@ final class BookingService
     /** @return LengthAwarePaginator<int, Booking> */
     public function getForUser(User $user): LengthAwarePaginator
     {
-        return $user->bookings()->with('car')->latest()->orderByDesc('id')->paginate(Config::integer('rental.bookings_per_page'))->withQueryString();
+        return $user->bookings()
+            ->with('car')
+            ->latest()
+            ->orderByDesc('id')
+            ->paginate(Config::integer('rental.bookings_per_page'))
+            ->withQueryString();
     }
 }

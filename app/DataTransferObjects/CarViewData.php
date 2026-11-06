@@ -6,21 +6,23 @@ namespace App\DataTransferObjects;
 
 use App\Models\Car;
 
+/**
+ * `rentalAvailability` is `null` when no dates were requested; the API response then omits all rental fields.
+ */
 final readonly class CarViewData
 {
     private function __construct(
         public Car $car,
-        public ?RentalQuote $quote,
-        public ?bool $isAvailable,
+        public ?RentalAvailability $rentalAvailability,
     ) {}
 
-    public static function withoutPeriod(Car $car): self
+    public static function withoutDates(Car $car): self
     {
-        return new self($car, null, null);
+        return new self($car, rentalAvailability: null);
     }
 
-    public static function forPeriod(Car $car, RentalQuote $quote, bool $isAvailable): self
+    public static function forDates(Car $car, RentalAvailability $rentalAvailability): self
     {
-        return new self($car, $quote, $isAvailable);
+        return new self($car, $rentalAvailability);
     }
 }

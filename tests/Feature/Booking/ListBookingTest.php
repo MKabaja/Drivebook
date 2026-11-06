@@ -31,7 +31,7 @@ test('users see only their own rental history with resource pagination', functio
     expect($response->json('data.0'))->not->toHaveKey('user_id');
 });
 
-test('booked car is embedded without rental quote fields', function () {
+test('booked car is embedded without rental price fields', function () {
     $this->travelTo(new DateTimeImmutable('2030-06-01 12:00:00 Europe/Warsaw'));
     $user = User::factory()->create();
     Booking::factory()->create(['user_id' => $user->id]);

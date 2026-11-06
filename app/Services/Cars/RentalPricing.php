@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Services\Cars;
 
-use App\DataTransferObjects\RentalQuote;
-use Carbon\CarbonImmutable;
+use App\DataTransferObjects\RentalDates;
+use App\DataTransferObjects\RentalPrice;
 
 final class RentalPricing
 {
-    public function quote(CarbonImmutable $startsOn, CarbonImmutable $endsOn, int $dailyRateInGrosze): RentalQuote
+    public function priceFor(RentalDates $dates, int $dailyRateInGrosze): RentalPrice
     {
-        $startsOn = $startsOn->startOfDay();
-        $endsOn = $endsOn->startOfDay();
-        $rentalDays = (int) CarbonImmutable::parse($startsOn->toDateString(), 'UTC')
-            ->diffInDays(CarbonImmutable::parse($endsOn->toDateString(), 'UTC'));
+        $rentalDays = $dates->rentalDays();
 
-        return new RentalQuote($startsOn, $endsOn, $rentalDays, $dailyRateInGrosze, $rentalDays * $dailyRateInGrosze);
+        return new RentalPrice(
+            startsOn: $dates->startsOn,
+            endsOn: $dates->endsOn,
+            rentalDays: $rentalDays,
+            dailyRateInGrosze: $dailyRateInGrosze,
+            totalPriceInGrosze: $rentalDays * $dailyRateInGrosze,
+        );
     }
 }

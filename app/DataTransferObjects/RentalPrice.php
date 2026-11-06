@@ -6,7 +6,10 @@ namespace App\DataTransferObjects;
 
 use Carbon\CarbonImmutable;
 
-final readonly class RentalQuote
+/**
+ * `totalPriceInGrosze = rentalDays × dailyRateInGrosze` for the dates `[startsOn, endsOn)`.
+ */
+final readonly class RentalPrice
 {
     public function __construct(
         public CarbonImmutable $startsOn,
@@ -16,7 +19,15 @@ final readonly class RentalQuote
         public int $totalPriceInGrosze,
     ) {}
 
-    /** @return array{starts_on: string, ends_on: string, rental_days: int, daily_rate_in_grosze: int, total_price_in_grosze: int} */
+    /**
+     * @return array{
+     *     starts_on: string,
+     *     ends_on: string,
+     *     rental_days: int,
+     *     daily_rate_in_grosze: int,
+     *     total_price_in_grosze: int,
+     * }
+     */
     public function toArray(): array
     {
         return [

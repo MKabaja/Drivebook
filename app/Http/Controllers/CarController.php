@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\DataTransferObjects\RentalPeriod;
+use App\DataTransferObjects\RentalDates;
 use App\DataTransferObjects\SearchCarsData;
 use App\Http\Requests\SearchCarsRequest;
 use App\Http\Requests\ShowCarRequest;
@@ -19,11 +19,17 @@ class CarController extends Controller
 
     public function index(SearchCarsRequest $request): AnonymousResourceCollection
     {
-        return CarResource::collection($this->carService->search(SearchCarsData::fromRequest($request)));
+        $search = SearchCarsData::fromRequest($request);
+        $matchingCars = $this->carService->search($search);
+
+        return CarResource::collection($matchingCars);
     }
 
     public function show(ShowCarRequest $request, Car $car): CarResource
     {
-        return new CarResource($this->carService->details($car, RentalPeriod::fromRequest($request)));
+        $requestedDates = RentalDates::fromRequest($request);
+        $carDetails = $this->carService->details($car, $requestedDates);
+
+        return new CarResource($carDetails);
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use App\DataTransferObjects\CarViewData;
+use App\DataTransferObjects\RentalAvailability;
+use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,10 +20,30 @@ class CarResource extends JsonResource
     /** @return array<string, mixed> */
     public function toArray(Request $request): array
     {
-        $car = $this->view->car;
-        $quote = $this->view->quote;
+        $carFields = $this->carFields($this->view->car);
+        $rentalAvailability = $this->view->rentalAvailability;
 
-        $fields = [
+        if ($rentalAvailability === null) {
+            return $carFields;
+        }
+
+        return [...$carFields, ...$this->rentalFields($rentalAvailability)];
+    }
+
+    /**
+     * @return array{
+     *     id: int,
+     *     name: string,
+     *     seats: int,
+     *     transmission: string,
+     *     category: string,
+     *     daily_rate_in_grosze: int,
+     *     image_path: string,
+     * }
+     */
+    private function carFields(Car $car): array
+    {
+        return [
             'id' => $car->id,
             'name' => $car->name,
             'seats' => $car->seats,
@@ -30,15 +52,33 @@ class CarResource extends JsonResource
             'daily_rate_in_grosze' => $car->daily_rate_in_grosze,
             'image_path' => $car->image_path,
         ];
+    }
 
-        if ($quote === null) {
-            return $fields;
-        }
-
+    /**
+     * @return array{
+     *     price: array{
+     *         starts_on: string,
+     *         ends_on: string,
+     *         rental_days: int,
+     *         daily_rate_in_grosze: int,
+     *         total_price_in_grosze: int,
+     *     },
+     *     is_available: bool,
+     *     alternative_dates: array{
+     *         starts_on: string,
+     *         ends_on: string,
+     *         rental_days: int,
+     *         daily_rate_in_grosze: int,
+     *         total_price_in_grosze: int,
+     *     }|null,
+     * }
+     */
+    private function rentalFields(RentalAvailability $rentalAvailability): array
+    {
         return [
-            ...$fields,
-            'quote' => $quote->toArray(),
-            'is_available' => $this->view->isAvailable,
+            'price' => $rentalAvailability->requestedPrice->toArray(),
+            'is_available' => $rentalAvailability->isAvailable,
+            'alternative_dates' => $rentalAvailability->alternativePrice?->toArray(),
         ];
     }
 }

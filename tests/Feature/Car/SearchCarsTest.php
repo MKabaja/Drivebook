@@ -38,7 +38,7 @@ test('filters treat seats as a minimum and combine with transmission', function 
     expect($response->json('data.*.id'))->toBe([$a->id, $b->id]);
 });
 
-test('a rental period hides cars booked for it and respects half-open boundaries', function () {
+test('rental dates hide cars booked on them and respect half-open boundaries', function () {
     $a = Car::factory()->create(['daily_rate_in_grosze' => 11100]);
     $b = Car::factory()->create(['daily_rate_in_grosze' => 22200]);
     $c = Car::factory()->create(['daily_rate_in_grosze' => 33300]);
@@ -56,20 +56,21 @@ test('a rental period hides cars booked for it and respects half-open boundaries
         ->assertExactJsonStructure([
             'data' => ['*' => [
                 'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path',
-                'quote' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
-                'is_available',
+                'price' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
+                'is_available', 'alternative_dates',
             ]],
             'links' => ['first', 'last', 'prev', 'next'],
             'meta' => ['current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'],
         ])
-        ->assertJsonPath('data.0.quote', [
+        ->assertJsonPath('data.0.price', [
             'starts_on' => '2030-06-10',
             'ends_on' => '2030-06-12',
             'rental_days' => 2,
             'daily_rate_in_grosze' => 11100,
             'total_price_in_grosze' => 22200,
         ])
-        ->assertJsonPath('data.0.is_available', true);
+        ->assertJsonPath('data.0.is_available', true)
+        ->assertJsonPath('data.0.alternative_dates', null);
     expect($response->json('data.*.id'))->toBe([$a->id, $b->id, $d->id]);
 });
 
@@ -109,7 +110,7 @@ test('boundary rental dates are accepted', function (string $query, ?int $rental
 
     $response->assertOk();
     if ($rentalDays !== null) {
-        $response->assertJsonPath('data.0.quote.rental_days', $rentalDays);
+        $response->assertJsonPath('data.0.price.rental_days', $rentalDays);
     }
 })->with([
     'tomorrow' => ['starts_on=2030-06-02&ends_on=2030-06-03', null],

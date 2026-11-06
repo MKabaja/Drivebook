@@ -9,13 +9,23 @@ use App\Http\Requests\ShowCarRequest;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Config;
 
-final readonly class RentalPeriod
+/**
+ * Half-open range `[startsOn, endsOn)`; both dates at midnight in `rental.timezone`.
+ */
+final readonly class RentalDates
 {
     public function __construct(
         public CarbonImmutable $startsOn,
         public CarbonImmutable $endsOn,
     ) {}
 
+    public function rentalDays(): int
+    {
+        return (int) CarbonImmutable::parse($this->startsOn->toDateString(), 'UTC')
+            ->diffInDays(CarbonImmutable::parse($this->endsOn->toDateString(), 'UTC'));
+    }
+
+    /** @return self|null `null` when the request has no dates */
     public static function fromRequest(SearchCarsRequest|ShowCarRequest $request): ?self
     {
         $payload = $request->safe();
@@ -24,10 +34,15 @@ final readonly class RentalPeriod
             return null;
         }
 
-        return new self(
-            startsOn: self::parseDate($payload->string('starts_on')->toString()),
-            endsOn: self::parseDate($payload->string('ends_on')->toString()),
+        return self::fromDateStrings(
+            $payload->string('starts_on')->toString(),
+            $payload->string('ends_on')->toString(),
         );
+    }
+
+    public static function fromDateStrings(string $startsOn, string $endsOn): self
+    {
+        return new self(self::parseDate($startsOn), self::parseDate($endsOn));
     }
 
     private static function parseDate(string $date): CarbonImmutable

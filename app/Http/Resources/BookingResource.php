@@ -28,7 +28,10 @@ class BookingResource extends JsonResource
             'rental_days' => $this->rentalDays(),
             'can_cancel' => $this->canCancel(CarbonImmutable::now(Config::string('rental.timezone'))),
             'created_at' => $this->created_at->toISOString(),
-            'car' => $this->whenLoaded('car', fn (): CarResource => new CarResource(CarViewData::withoutPeriod($this->car))),
+            'car' => $this->whenLoaded(
+                'car',
+                fn (): CarResource => new CarResource(CarViewData::withoutDates($this->car)),
+            ),
         ];
     }
 }
