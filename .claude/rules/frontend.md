@@ -18,6 +18,7 @@ src/
 ├── features/<feature>/
 │   ├── api/<res>.api.ts         czyste funkcje HTTP: backend.* + parse Zod + odpakowanie { data }; bez Reacta
 │   ├── model/<res>.schemas.ts   schematy Zod + `type X = z.infer<…>`; <res>.constants.ts — etykiety, limity
+│   │                            stan klienta bez Reacta i bez HTTP (zależności wstrzykiwane), np. `auth/model/session.ts`
 │   ├── lib/<function-name>.ts   czyste funkcje (daty, ceny, mapowanie błędów); plik = nazwa funkcji
 │   ├── components/<name>/       <name>.tsx, <name>.styles.ts, części <name>.<part>.tsx (testy w components/__tests__/)
 │   └── pages/<name>-page.tsx    tylko gdy ekran składa kilka komponentów
