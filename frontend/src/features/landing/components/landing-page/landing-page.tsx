@@ -53,8 +53,8 @@ function LandingPage() {
 						your plans. Leave the rest to us.
 					</p>
 					<div className={actions}>
-						<Link to="/register" className={primary}>
-							Create an account
+						<Link to="/cars" className={primary}>
+							Find your car
 							<ArrowUpRight size={18} aria-hidden="true" />
 						</Link>
 						<a href="#how-it-works" className={secondary}>
@@ -140,8 +140,8 @@ function LandingPage() {
 						yours.
 					</p>
 				</div>
-				<Link to="/register" className={primary}>
-					Create an account
+				<Link to="/cars" className={primary}>
+					Browse cars
 					<ArrowUpRight size={18} aria-hidden="true" />
 				</Link>
 			</section>

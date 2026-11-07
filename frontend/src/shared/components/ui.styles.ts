@@ -1,4 +1,4 @@
-export const uiStyles = {
+const uiStyles = {
 	shell: 'mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12',
 	page: 'py-10 sm:py-16',
 	eyebrow: 'mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-accent',
@@ -19,5 +19,6 @@ export const uiStyles = {
 	empty:
 		'mt-8 rounded-2xl border border-line bg-panel p-10 text-center text-muted',
 	form: 'space-y-5',
-	status: 'rounded-full border border-control px-3 py-1 text-xs text-muted',
 } satisfies Record<string, string>;
+
+export { uiStyles };
