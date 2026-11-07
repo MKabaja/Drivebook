@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import { HttpResponse, http } from 'msw';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { makeCar, makeRentalPrice } from '@/test/factories/car.factory';
 import { page } from '@/test/msw/envelopes';
@@ -27,12 +27,7 @@ function recordCarRequests(
 
 describe('catalog page', () => {
 	beforeEach(() => {
-		vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true });
 		vi.setSystemTime(new Date('2026-11-07T12:00:00Z'));
-	});
-
-	afterEach(() => {
-		vi.useRealTimers();
 	});
 
 	it('puts the filters in the URL and loads the matching cars', async () => {

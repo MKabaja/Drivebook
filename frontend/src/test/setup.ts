@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterAll, afterEach, beforeAll, expect, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, expect, vi } from 'vitest';
 
 import { server } from '@/test/msw/server';
 
@@ -20,8 +20,13 @@ beforeAll(() => {
 	});
 });
 
+beforeEach(() => {
+	vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true });
+});
+
 afterEach(() => {
 	cleanup();
+	vi.useRealTimers();
 	vi.unstubAllGlobals();
 	server.resetHandlers();
 	const unhandled = unhandledFrames.splice(0);
