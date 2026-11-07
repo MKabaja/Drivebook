@@ -1,7 +1,8 @@
 import { HttpResponse, http } from 'msw';
 import { describe, expect, it } from 'vitest';
 
-import { createSession } from '@/features/auth/api/session.api';
+import { fetchCurrentUser } from '@/features/auth/api/auth.api';
+import { createSession } from '@/features/auth/model/session';
 
 import { makeUser } from '@/test/factories/user.factory';
 import { resource } from '@/test/msw/envelopes';
@@ -18,7 +19,7 @@ describe('createSession', () => {
 				return HttpResponse.json(resource(user));
 			}),
 		);
-		const session = createSession();
+		const session = createSession(fetchCurrentUser);
 
 		const first = await session.loadUser(newSignal());
 		const second = await session.loadUser(newSignal());
@@ -29,7 +30,7 @@ describe('createSession', () => {
 	});
 
 	it('resolves null when the API answers 401', async () => {
-		const session = createSession();
+		const session = createSession(fetchCurrentUser);
 
 		const result = await session.loadUser(newSignal());
 
@@ -44,7 +45,7 @@ describe('createSession', () => {
 				return HttpResponse.json(resource(makeUser()));
 			}),
 		);
-		const session = createSession();
+		const session = createSession(fetchCurrentUser);
 		session.setUser(null);
 
 		const result = await session.loadUser(newSignal());
@@ -59,7 +60,7 @@ describe('createSession', () => {
 			http.get('/api/user', () => HttpResponse.error(), { once: true }),
 			signedInAs(user),
 		);
-		const session = createSession();
+		const session = createSession(fetchCurrentUser);
 
 		await session.loadUser(newSignal()).catch(() => undefined);
 		const result = await session.loadUser(newSignal());

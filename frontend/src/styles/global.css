@@ -21,6 +21,9 @@
 		outline: 3px solid var(--color-accent);
 		outline-offset: 5px;
 	}
+	[tabindex="-1"]:focus-visible {
+		outline: none;
+	}
 	::selection {
 		color: var(--color-canvas);
 		background: var(--color-accent);

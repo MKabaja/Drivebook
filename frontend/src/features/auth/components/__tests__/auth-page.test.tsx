@@ -3,7 +3,7 @@ import { HttpResponse, http } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { makeUser } from '@/test/factories/user.factory';
-import { resource } from '@/test/msw/envelopes';
+import { page, resource } from '@/test/msw/envelopes';
 import { signedInAs } from '@/test/msw/handlers';
 import { server } from '@/test/msw/server';
 import { createDeferred } from '@/test/utils/deferred';
@@ -135,6 +135,21 @@ describe('login', () => {
 		await user.type(await screen.findByLabelText('Email address'), EMAIL);
 		await user.type(screen.getByLabelText('Password'), PASSWORD);
 	}
+});
+
+describe('login page for a signed-in user', () => {
+	it('goes straight to the requested page', async () => {
+		server.use(
+			signedInAs(makeUser()),
+			http.get('/api/bookings', () => HttpResponse.json(page([]))),
+		);
+		const { router } = renderApp('/login?redirect=%2Fbookings');
+
+		expect(
+			await screen.findByRole('heading', { name: 'You have no bookings yet.' }),
+		).toBeInTheDocument();
+		expect(router.state.location.pathname).toBe('/bookings');
+	});
 });
 
 describe('registration', () => {

@@ -6,7 +6,7 @@ import {
 	RouteError,
 	RoutePending,
 } from '@/shared/components/route-feedback/route-feedback';
-import type { Session } from '@/features/auth/api/session.api';
+import type { Session } from '@/features/auth/model/session';
 
 type RouterContext = { session: Session };
 

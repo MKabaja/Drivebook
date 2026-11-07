@@ -10,7 +10,7 @@ function CatalogPage({ carPage, search, today }: CatalogPageProps) {
 	const { shell, page, eyebrow, title, lead } = uiStyles;
 
 	return (
-		<main id="main" className={`${shell} ${page}`}>
+		<main id="main" tabIndex={-1} className={`${shell} ${page}`}>
 			<p className={eyebrow}>Our fleet</p>
 			<h1 className={title}>Every journey starts here.</h1>
 			<p className={lead}>

@@ -34,7 +34,23 @@ async function register(registration: Registration): Promise<User> {
 	return userResourceSchema.parse(response).data;
 }
 
+/**
+ * Ends the session. An already expired session counts as signed out; after a 419 (stale CSRF
+ * cookie) the cookie is refreshed and the request sent once more.
+ */
 async function logout(): Promise<void> {
+	try {
+		await postLogout();
+	} catch (error) {
+		if (!isCsrfMismatch(error)) {
+			throw error;
+		}
+		await prepareCsrfCookie();
+		await postLogout();
+	}
+}
+
+async function postLogout(): Promise<void> {
 	try {
 		await backend.post('/api/logout');
 	} catch (error) {
@@ -50,6 +66,10 @@ async function prepareCsrfCookie(): Promise<void> {
 
 function isUnauthenticated(error: unknown): boolean {
 	return error instanceof HttpError && error.status === 401;
+}
+
+function isCsrfMismatch(error: unknown): boolean {
+	return error instanceof HttpError && error.status === 419;
 }
 
 export { fetchCurrentUser, login, logout, register };

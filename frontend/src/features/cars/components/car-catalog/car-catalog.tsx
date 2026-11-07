@@ -15,7 +15,6 @@ function CarCatalog({ carPage, search }: CarCatalogProps) {
 	const { grid, empty, secondary } = uiStyles;
 	const { count, emptyTitle, emptyText, emptyAction } = carCatalogStyles;
 	const { cars, pagination } = carPage;
-	const dates = { starts_on: search.starts_on, ends_on: search.ends_on };
 	const headingRef = useRef<HTMLHeadingElement>(null);
 
 	function focusResults() {
@@ -41,7 +40,7 @@ function CarCatalog({ carPage, search }: CarCatalogProps) {
 				<ul className={grid}>
 					{cars.map((car) => (
 						<li key={car.id} className="flex">
-							<CarCard car={car} dates={dates} />
+							<CarCard car={car} search={search} />
 						</li>
 					))}
 				</ul>

@@ -8,13 +8,13 @@ import {
 	labelByTransmission,
 } from '@/features/cars/model/car.constants';
 import type { Car } from '@/features/cars/model/car.schemas';
-import type { RentalDatesSearch } from '@/features/cars/model/car-search.schemas';
+import type { CarSearch } from '@/features/cars/model/car-search.schemas';
 
 import { carCardStyles } from './car-card.styles';
 
-type CarCardProps = { car: Car; dates: RentalDatesSearch };
+type CarCardProps = { car: Car; search: CarSearch };
 
-function CarCard({ car, dates }: CarCardProps) {
+function CarCard({ car, search }: CarCardProps) {
 	const {
 		card,
 		media,
@@ -52,7 +52,7 @@ function CarCard({ car, dates }: CarCardProps) {
 					<Link
 						to="/cars/$carId"
 						params={{ carId: String(car.id) }}
-						search={dates}
+						search={search}
 						className={titleLink}
 					>
 						{car.name}

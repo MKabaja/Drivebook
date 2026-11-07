@@ -1,23 +1,40 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, Gauge, Users } from 'lucide-react';
+import { type ReactNode, useRef } from 'react';
 
 import { uiStyles } from '@/shared/components/ui.styles';
 import { PICKUP_TIME } from '@/shared/config';
-import { formatCalendarDate } from '@/shared/lib/format-calendar-date';
-import { formatDayCount } from '@/shared/lib/format-day-count';
 import { formatPrice } from '@/shared/lib/format-price';
 import {
 	labelByCategory,
 	labelByTransmission,
 } from '@/features/cars/model/car.constants';
-import type { Car } from '@/features/cars/model/car.schemas';
-import type { RentalDatesSearch } from '@/features/cars/model/car-search.schemas';
+import type { Car, RentalPrice } from '@/features/cars/model/car.schemas';
+import type { CarSearch } from '@/features/cars/model/car-search.schemas';
 
+import { CarDetailsAlternativeDates } from './car-details.alternative-dates';
+import { CarDetailsQuoteSummary } from './car-details.quote-summary';
+import { CarDetailsRentalDateForm } from './car-details.rental-date-form';
 import { carDetailsStyles } from './car-details.styles';
 
-type CarDetailsProps = { car: Car; dates: RentalDatesSearch };
+type ReserveActionSlot = {
+	price: RentalPrice;
+	focusPriceSummary: () => void;
+};
+type RenderReserveAction = (slot: ReserveActionSlot) => ReactNode;
+type CarDetailsProps = {
+	car: Car;
+	search: CarSearch;
+	today: string;
+	renderReserveAction: RenderReserveAction;
+};
 
-function CarDetails({ car, dates }: CarDetailsProps) {
+function CarDetails({
+	car,
+	search,
+	today,
+	renderReserveAction,
+}: CarDetailsProps) {
 	const { shell, page, eyebrow, title, panel } = uiStyles;
 	const {
 		backLink,
@@ -28,15 +45,20 @@ function CarDetails({ car, dates }: CarDetailsProps) {
 		spec,
 		rate,
 		unit,
-		summary,
-		summaryTitle,
-		unavailable,
+		booking,
+		bookingTitle,
+		hint,
 		note,
 	} = carDetailsStyles;
+	const priceSummaryRef = useRef<HTMLElement>(null);
+
+	function focusPriceSummary() {
+		priceSummaryRef.current?.focus();
+	}
 
 	return (
-		<main id="main" className={`${shell} ${page}`}>
-			<Link to="/cars" search={dates} className={backLink}>
+		<main id="main" tabIndex={-1} className={`${shell} ${page}`}>
+			<Link to="/cars" search={search} className={backLink}>
 				<ArrowLeft size={17} aria-hidden="true" />
 				Back to cars
 			</Link>
@@ -69,31 +91,42 @@ function CarDetails({ car, dates }: CarDetailsProps) {
 						{formatPrice(car.daily_rate_in_grosze)}
 						<span className={unit}>/ day</span>
 					</p>
-					<section className={`${panel} ${summary}`} aria-label="Your dates">
-						{car.price ? (
-							<>
-								<h2 className={summaryTitle}>
-									{formatCalendarDate(car.price.starts_on)} –{' '}
-									{formatCalendarDate(car.price.ends_on)}
-								</h2>
-								<p>
-									{formatDayCount(car.price.rental_days)} ·{' '}
-									{formatPrice(car.price.total_price_in_grosze)} in total
-								</p>
-								{car.is_available === false && (
-									<p className={unavailable}>
-										This car is already booked on these dates.
-									</p>
-								)}
-							</>
-						) : (
-							<p>
-								Choose your dates in the{' '}
-								<Link to="/cars" className="text-accent underline">
-									catalog
-								</Link>{' '}
-								to see the full price.
+					<section
+						className={`${panel} ${booking}`}
+						aria-labelledby="car-booking-title"
+					>
+						<h2 id="car-booking-title" className={bookingTitle}>
+							Plan your rental
+						</h2>
+						<CarDetailsRentalDateForm
+							carId={car.id}
+							search={search}
+							today={today}
+						/>
+						{car.price === undefined && (
+							<p className={hint}>
+								Choose your dates to see the full price and book this car.
 							</p>
+						)}
+						<div aria-live="polite">
+							{car.price && (
+								<CarDetailsQuoteSummary
+									ref={priceSummaryRef}
+									price={car.price}
+									isAvailable={car.is_available === true}
+								/>
+							)}
+						</div>
+						{car.price &&
+							car.is_available &&
+							renderReserveAction({ price: car.price, focusPriceSummary })}
+						{car.price && car.is_available === false && (
+							<CarDetailsAlternativeDates
+								carId={car.id}
+								search={search}
+								alternativeDates={car.alternative_dates}
+								onChoose={focusPriceSummary}
+							/>
 						)}
 						<p className={note}>
 							Pick-up and return at {PICKUP_TIME} (Warsaw time).
@@ -105,4 +138,5 @@ function CarDetails({ car, dates }: CarDetailsProps) {
 	);
 }
 
+export type { ReserveActionSlot };
 export { CarDetails };

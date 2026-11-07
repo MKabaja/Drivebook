@@ -1,5 +1,12 @@
-import { Link, Outlet, useRouteContext } from '@tanstack/react-router';
+import {
+	Link,
+	Outlet,
+	useRouteContext,
+	useRouter,
+	useRouterState,
+} from '@tanstack/react-router';
 import { CarFront } from 'lucide-react';
+import { useEffect } from 'react';
 
 import { uiStyles } from '@/shared/components/ui.styles';
 import { SignOutButton } from '@/features/auth/components/sign-out-button/sign-out-button';
@@ -18,14 +25,28 @@ function RootLayout() {
 		navLink,
 		footer,
 		footerInner,
+		loadingBar,
 	} = rootLayoutStyles;
+	const router = useRouter();
+	const isLoading = useRouterState({ select: (state) => state.isLoading });
 	const user = useRouteContext({
 		from: '__root__',
 		select: (context) => context.user,
 	});
 
+	useEffect(
+		() =>
+			router.subscribe('onRendered', ({ fromLocation, pathChanged }) => {
+				if (fromLocation !== undefined && pathChanged) {
+					document.getElementById('main')?.focus({ preventScroll: true });
+				}
+			}),
+		[router],
+	);
+
 	return (
 		<div className="flex min-h-dvh flex-col">
+			{isLoading && <div className={loadingBar} aria-hidden="true" />}
 			<a href="#main" className={skip}>
 				Skip to content
 			</a>
@@ -43,6 +64,9 @@ function RootLayout() {
 						</Link>
 						{user ? (
 							<>
+								<Link to="/bookings" className={navLink}>
+									My bookings
+								</Link>
 								<span className="max-w-36 truncate text-muted">
 									{user.name}
 								</span>

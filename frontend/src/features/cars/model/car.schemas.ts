@@ -36,7 +36,8 @@ const carSchema = z.object({
 	image_srcset: z.string().min(1),
 	price: rentalPriceSchema.optional(),
 	is_available: z.boolean().optional(),
+	alternative_dates: rentalPriceSchema.nullable().optional(),
 });
 
 export type { Car, CarCategory, RentalPrice, Transmission };
-export { carSchema, transmissionSchema };
+export { carSchema, rentalPriceSchema, transmissionSchema };

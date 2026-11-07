@@ -6,7 +6,8 @@ import {
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { createSession } from '@/features/auth/api/session.api';
+import { fetchCurrentUser } from '@/features/auth/api/auth.api';
+import { createSession } from '@/features/auth/model/session';
 
 import { routeTree } from '@/routeTree.gen';
 
@@ -18,7 +19,7 @@ function renderApp(path: string) {
 	const router = createRouter({
 		routeTree,
 		history: createMemoryHistory({ initialEntries: [path] }),
-		context: { session: createSession() },
+		context: { session: createSession(fetchCurrentUser) },
 	});
 	render(<RouterProvider router={router} />);
 	return { router, user: userEvent.setup() };

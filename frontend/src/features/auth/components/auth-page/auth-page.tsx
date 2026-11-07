@@ -64,7 +64,6 @@ function AuthPage({ mode, redirectTo }: AuthPageProps) {
 		try {
 			const user = await submitByAuthMode[mode](formData);
 			session.setUser(user);
-			await router.invalidate();
 			await router.navigate({ href: redirectTo });
 		} catch (error) {
 			setFormState({ status: 'failed', error: toAuthFormError(error) });
@@ -72,7 +71,7 @@ function AuthPage({ mode, redirectTo }: AuthPageProps) {
 	}
 
 	return (
-		<main id="main" className={`${shell} ${page}`}>
+		<main id="main" tabIndex={-1} className={`${shell} ${page}`}>
 			<div className={container}>
 				<p className={eyebrow}>
 					<LockKeyhole size={16} className="mr-2 inline" aria-hidden="true" />

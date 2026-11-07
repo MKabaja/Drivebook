@@ -30,6 +30,7 @@ function SignOutButton() {
 			session.setUser(null);
 			await router.navigate({ to: '/' });
 			await router.invalidate();
+			document.getElementById('main')?.focus();
 		} catch (error) {
 			setSignOutState({ status: 'failed', message: describeError(error) });
 		}

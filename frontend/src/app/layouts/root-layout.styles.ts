@@ -11,6 +11,7 @@ const rootLayoutStyles = {
 		'min-h-11 content-center text-muted transition-colors hover:text-copy [&.active]:text-accent',
 	footer: 'mt-auto border-t border-line py-7 text-xs text-muted',
 	footerInner: 'flex flex-wrap items-center justify-between gap-4',
+	loadingBar: 'fixed inset-x-0 top-0 z-50 h-1 bg-accent',
 } satisfies Record<string, string>;
 
 export { rootLayoutStyles };
