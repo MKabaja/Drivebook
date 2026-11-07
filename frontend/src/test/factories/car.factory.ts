@@ -1,6 +1,9 @@
 import type { Car, RentalPrice } from '@/features/cars/model/car.schemas';
 
-function makeCar(overrides: Partial<Car> = {}): Car {
+type CarOverrides = Partial<Car>;
+type RentalPriceOverrides = Partial<RentalPrice>;
+
+function makeCar(overrides: CarOverrides = {}): Car {
 	return {
 		id: 3,
 		name: 'Ford Mustang',
@@ -13,7 +16,7 @@ function makeCar(overrides: Partial<Car> = {}): Car {
 	};
 }
 
-function makeRentalPrice(overrides: Partial<RentalPrice> = {}): RentalPrice {
+function makeRentalPrice(overrides: RentalPriceOverrides = {}): RentalPrice {
 	return {
 		starts_on: '2026-11-10',
 		ends_on: '2026-11-13',
