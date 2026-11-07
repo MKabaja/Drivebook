@@ -14,6 +14,7 @@ import {
 	findRentalDatesError,
 	type RentalDatesError,
 } from '@/features/cars/lib/find-rental-dates-error';
+import { isCalendarDate } from '@/features/cars/lib/is-calendar-date';
 import { toCarFilters } from '@/features/cars/lib/to-car-filters';
 import { toCarSearch } from '@/features/cars/lib/to-car-search';
 import {
@@ -25,7 +26,6 @@ import type {
 	CarFilterValues,
 	CarSearch,
 } from '@/features/cars/model/car-search.schemas';
-import { rentalDatesSearchSchema } from '@/features/cars/model/car-search.schemas';
 
 import { carFiltersStyles } from './car-filters.styles';
 
@@ -148,10 +148,6 @@ function CarFilters({ search, today }: CarFiltersProps) {
 			</div>
 		</form>
 	);
-}
-
-function isCalendarDate(value: string): boolean {
-	return rentalDatesSearchSchema.shape.starts_on.parse(value) !== undefined;
 }
 
 function focusControl(form: HTMLFormElement, name: CarFilterField) {
