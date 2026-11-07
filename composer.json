@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "mkabaja/drivebook",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "DriveBook car rental booking API: Laravel REST backend with Sanctum SPA sessions.",
+    "keywords": ["drivebook", "car-rental", "booking", "laravel", "rest-api"],
     "license": "MIT",
     "require": {
         "php": "^8.5",
