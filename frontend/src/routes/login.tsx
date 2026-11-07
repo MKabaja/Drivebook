@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { AuthPage } from '@/features/auth/components/auth-page/auth-page';
 import { authSearchSchema } from '@/features/auth/model/auth-search.schemas';
@@ -10,5 +10,10 @@ function LoginPage() {
 
 export const Route = createFileRoute('/login')({
 	validateSearch: authSearchSchema,
+	beforeLoad: ({ context, search }) => {
+		if (context.user !== null) {
+			throw redirect({ href: search.redirect });
+		}
+	},
 	component: LoginPage,
 });

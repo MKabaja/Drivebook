@@ -64,7 +64,6 @@ function AuthPage({ mode, redirectTo }: AuthPageProps) {
 		try {
 			const user = await submitByAuthMode[mode](formData);
 			session.setUser(user);
-			await router.invalidate();
 			await router.navigate({ href: redirectTo });
 		} catch (error) {
 			setFormState({ status: 'failed', error: toAuthFormError(error) });
