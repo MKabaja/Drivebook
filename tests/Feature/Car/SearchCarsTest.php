@@ -26,6 +26,27 @@ test('guests browse the fleet without rental fields', function () {
     expect($response->json('data.*.id'))->toBe($cars->modelKeys());
 });
 
+test('cars come cheapest first, ties by id', function () {
+    $a = Car::factory()->create(['daily_rate_in_grosze' => 30000]);
+    $b = Car::factory()->create(['daily_rate_in_grosze' => 10000]);
+    $c = Car::factory()->create(['daily_rate_in_grosze' => 10000]);
+
+    $response = $this->getJson('/api/cars');
+
+    $response->assertOk();
+    expect($response->json('data.*.id'))->toBe([$b->id, $c->id, $a->id]);
+});
+
+test('car exposes responsive image urls', function () {
+    Car::factory()->create(['image_path' => 'cars/kia-sportage']);
+
+    $response = $this->getJson('/api/cars');
+
+    $response->assertOk()
+        ->assertJsonPath('data.0.image_url', '/storage/cars/kia-sportage-1280.webp')
+        ->assertJsonPath('data.0.image_srcset', '/storage/cars/kia-sportage-640.webp 640w, /storage/cars/kia-sportage-1280.webp 1280w');
+});
+
 test('filters treat seats as a minimum and combine with transmission', function () {
     $a = Car::factory()->create(['seats' => 4, 'transmission' => Transmission::Automatic]);
     $b = Car::factory()->create(['seats' => 5, 'transmission' => Transmission::Automatic]);
