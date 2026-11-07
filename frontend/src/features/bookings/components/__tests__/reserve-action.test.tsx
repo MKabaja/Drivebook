@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import { HttpResponse, http } from 'msw';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { makeBooking } from '@/test/factories/booking.factory';
 import { makeCar, makeRentalPrice } from '@/test/factories/car.factory';
@@ -24,12 +24,7 @@ function availableCar() {
 
 describe('reserving a car', () => {
 	beforeEach(() => {
-		vi.useFakeTimers({ toFake: ['Date'], shouldAdvanceTime: true });
 		vi.setSystemTime(new Date('2026-11-07T12:00:00Z'));
-	});
-
-	afterEach(() => {
-		vi.useRealTimers();
 	});
 
 	it('offers a guest a sign-in link that returns to the chosen dates', async () => {
