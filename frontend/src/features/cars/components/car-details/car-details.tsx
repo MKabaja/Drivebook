@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, Gauge, Users } from 'lucide-react';
-import { type ReactNode, useRef } from 'react';
+import { ArrowLeft, ArrowRight, Gauge, Users } from 'lucide-react';
+import { useRef } from 'react';
 
 import { PICKUP_TIME } from '@/shared/config';
 import { formatPrice } from '@/shared/lib/format-price';
@@ -9,7 +9,7 @@ import {
 	labelByCategory,
 	labelByTransmission,
 } from '@/features/cars/model/car.constants';
-import type { Car, RentalPrice } from '@/features/cars/model/car.schemas';
+import type { Car } from '@/features/cars/model/car.schemas';
 import type { CarSearch } from '@/features/cars/model/car-search.schemas';
 
 import { CarDetailsAlternativeDates } from './car-details.alternative-dates';
@@ -17,25 +17,14 @@ import { CarDetailsQuoteSummary } from './car-details.quote-summary';
 import { CarDetailsRentalDateForm } from './car-details.rental-date-form';
 import { carDetailsStyles } from './car-details.styles';
 
-type ReserveActionSlot = {
-	price: RentalPrice;
-	focusPriceSummary: () => void;
-};
-type RenderReserveAction = (slot: ReserveActionSlot) => ReactNode;
 type CarDetailsProps = {
 	car: Car;
 	search: CarSearch;
 	today: string;
-	renderReserveAction: RenderReserveAction;
 };
 
-function CarDetails({
-	car,
-	search,
-	today,
-	renderReserveAction,
-}: CarDetailsProps) {
-	const { shell, page, eyebrow, title, panel } = uiStyles;
+function CarDetails({ car, search, today }: CarDetailsProps) {
+	const { shell, page, eyebrow, title, panel, primary } = uiStyles;
 	const {
 		backLink,
 		layout,
@@ -47,6 +36,7 @@ function CarDetails({
 		unit,
 		booking,
 		bookingTitle,
+		checkoutAction,
 		hint,
 		note,
 	} = carDetailsStyles;
@@ -117,9 +107,25 @@ function CarDetails({
 								/>
 							)}
 						</div>
-						{car.price &&
-							car.is_available &&
-							renderReserveAction({ price: car.price, focusPriceSummary })}
+						{car.price && car.is_available && (
+							<div className={checkoutAction}>
+								<Link
+									to="/cars/$carId/checkout"
+									params={{ carId: String(car.id) }}
+									search={{
+										starts_on: car.price.starts_on,
+										ends_on: car.price.ends_on,
+									}}
+									className={`${primary} w-full`}
+								>
+									Continue to checkout
+									<ArrowRight size={18} aria-hidden="true" />
+								</Link>
+								<p className={hint}>
+									No account needed yet — sign in or sign up at checkout.
+								</p>
+							</div>
+						)}
 						{car.price && car.is_available === false && (
 							<CarDetailsAlternativeDates
 								carId={car.id}
@@ -138,5 +144,4 @@ function CarDetails({
 	);
 }
 
-export type { ReserveActionSlot };
 export { CarDetails };

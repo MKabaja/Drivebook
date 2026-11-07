@@ -7,12 +7,18 @@ import { bookingSearchSchema } from '@/features/bookings/model/booking-search.sc
 import { BookingsPage } from '@/features/bookings/pages/bookings-page';
 
 function BookingsRoute() {
-	return <BookingsPage bookingPage={Route.useLoaderData()} />;
+	const { booked } = Route.useSearch();
+	return (
+		<BookingsPage
+			bookingPage={Route.useLoaderData()}
+			isJustBooked={booked !== undefined}
+		/>
+	);
 }
 
 export const Route = createFileRoute('/_authenticated/bookings')({
 	validateSearch: bookingSearchSchema,
-	loaderDeps: ({ search }) => search,
+	loaderDeps: ({ search }) => ({ page: search.page }),
 	loader: async ({ deps, context, location, abortController }) => {
 		try {
 			const bookingPage = await fetchBookings(
