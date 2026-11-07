@@ -8,7 +8,7 @@ import { CalendarCheck, LogIn } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import { createBooking } from '@/features/bookings/api/bookings.api';
 import { describeReserveFailure } from '@/features/bookings/lib/describe-reserve-failure';
 import {

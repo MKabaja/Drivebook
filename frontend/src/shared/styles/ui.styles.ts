@@ -11,7 +11,7 @@ const uiStyles = {
 		'inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-control px-5 text-sm font-medium text-copy transition-colors hover:border-accent hover:text-accent disabled:cursor-wait disabled:opacity-60 aria-disabled:cursor-wait aria-disabled:opacity-60',
 	input:
 		'mt-2 min-h-12 w-full rounded-xl border border-control bg-canvas px-4 py-3 text-copy aria-invalid:border-error',
-	label: 'block text-sm font-medium text-copy',
+	fieldLabel: 'block text-sm font-medium text-copy',
 	fieldError: 'mt-2 text-sm text-error',
 	alert:
 		'rounded-xl border border-error bg-panel p-4 text-sm leading-6 text-copy',

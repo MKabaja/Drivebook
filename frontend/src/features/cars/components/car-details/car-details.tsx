@@ -2,9 +2,9 @@ import { Link } from '@tanstack/react-router';
 import { ArrowLeft, Gauge, Users } from 'lucide-react';
 import { type ReactNode, useRef } from 'react';
 
-import { uiStyles } from '@/shared/components/ui.styles';
 import { PICKUP_TIME } from '@/shared/config';
 import { formatPrice } from '@/shared/lib/format-price';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import {
 	labelByCategory,
 	labelByTransmission,

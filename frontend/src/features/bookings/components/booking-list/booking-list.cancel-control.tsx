@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import type { Booking } from '@/features/bookings/model/booking.schemas';
 
 import { bookingListStyles } from './booking-list.styles';

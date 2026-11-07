@@ -1,4 +1,4 @@
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import type { CarPage } from '@/features/cars/api/cars.api';
 import { CarCatalog } from '@/features/cars/components/car-catalog/car-catalog';
 import { CarFilters } from '@/features/cars/components/car-filters/car-filters';

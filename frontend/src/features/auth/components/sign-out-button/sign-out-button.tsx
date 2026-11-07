@@ -2,8 +2,8 @@ import { useRouteContext, useRouter } from '@tanstack/react-router';
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
 
-import { uiStyles } from '@/shared/components/ui.styles';
 import { describeError } from '@/shared/lib/describe-error';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import { logout } from '@/features/auth/api/auth.api';
 
 type SignOutState =

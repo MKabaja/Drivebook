@@ -1,11 +1,11 @@
 import { Link } from '@tanstack/react-router';
 import { CalendarClock } from 'lucide-react';
 
-import { uiStyles } from '@/shared/components/ui.styles';
 import { ALTERNATIVE_DATES_WINDOW_DAYS } from '@/shared/config';
 import { formatCalendarDate } from '@/shared/lib/format-calendar-date';
 import { formatDayCount } from '@/shared/lib/format-day-count';
 import { formatPrice } from '@/shared/lib/format-price';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import type { RentalPrice } from '@/features/cars/model/car.schemas';
 import type { CarSearch } from '@/features/cars/model/car-search.schemas';
 

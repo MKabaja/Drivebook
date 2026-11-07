@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import type { BookingPage } from '@/features/bookings/api/bookings.api';
 import { BookingList } from '@/features/bookings/components/booking-list/booking-list';
 

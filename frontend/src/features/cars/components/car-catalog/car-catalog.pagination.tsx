@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 
 import type { Pagination } from '@/shared/api/envelopes';
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import type { CarSearch } from '@/features/cars/model/car-search.schemas';
 
 import { carCatalogStyles } from './car-catalog.styles';
