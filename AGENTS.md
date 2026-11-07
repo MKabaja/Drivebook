@@ -18,7 +18,8 @@ Backend przez Sail (`./vendor/bin/sail up -d`): testy, analiza i lint tylko w ko
 
 Frontend (Node 24 z `frontend/.nvmrc`):
 
-- `npm --prefix frontend run dev` — Vite na 5174, proxy `/api` i `/sanctum` do Laravela
+- `npm --prefix frontend run dev` — Vite na 5174, proxy `/api`, `/sanctum` i `/storage` do Laravela
+- Po świeżej bazie: `./vendor/bin/sail artisan storage:link` i `./vendor/bin/sail artisan db:seed` — zdjęcia aut serwuje dysk `public`
 - `npm --prefix frontend run lint:fix` — Biome: lint + format + importy (**zapisuje**); `lint` bez zapisu; `format` — tylko formatowanie (**zapisuje**)
 - `npm --prefix frontend run typecheck` — `tsc` dla `tsconfig.app.json` i `tsconfig.node.json`
 - `npm --prefix frontend test` — Vitest jednorazowo; jeden plik: `npm --prefix frontend test -- src/<ścieżka>.test.tsx`
