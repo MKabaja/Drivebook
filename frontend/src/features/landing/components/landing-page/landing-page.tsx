@@ -29,7 +29,7 @@ function LandingPage() {
 		<main id="main" className={shell}>
 			<section className={hero} aria-labelledby="welcome-title">
 				<img
-					src="/design/grid-texture.png"
+					src="/images/grid-texture.png"
 					alt=""
 					className={texture}
 					width="400"
@@ -69,7 +69,7 @@ function LandingPage() {
 					transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
 				>
 					<img
-						src="/design/porsche.jpg"
+						src="/images/cars/porsche-panamera.jpg"
 						alt="Black Porsche Panamera on the road"
 						width="1200"
 						height="800"
