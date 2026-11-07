@@ -17,7 +17,7 @@ describe('safeRedirect', () => {
 		undefined,
 		42,
 	])('returns the fallback for %j', (value) => {
-		expect(safeRedirect(value)).toBe('/');
+		expect(safeRedirect(value)).toBe('/cars');
 	});
 
 	it('keeps a car details path with its query unchanged', () => {

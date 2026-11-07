@@ -1,4 +1,4 @@
-const FALLBACK_PATH = '/';
+const FALLBACK_PATH = '/cars';
 const ALLOWED_PATHNAMES = new Set(['/', '/cars', '/bookings']);
 const CAR_DETAILS_PATHNAME = /^\/cars\/[1-9]\d*$/;
 const UNSAFE_CHARACTERS = /[\\\r\n]/;
