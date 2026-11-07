@@ -30,6 +30,7 @@ Co i ile testować: skill `test-strategy`. Jak pisać: `testing-laravel` (backen
 
 ## Frontend (Vitest + Testing Library)
 
+- Testy w `__tests__/` obok kodu, jeden na główny folder: `lib/__tests__/<function-name>.test.ts`, `components/__tests__/<name>.test.tsx`, `test/factories/__tests__/`. Importy w testach tylko przez `@/`.
 - Testujemy logikę: czyste funkcje z `lib/`, przepływy (422/409/401, anulowanie, wybór alternatywy, brak auto-retry POST), atrybuty dostępności, renderowanie warunkowe.
 - Nie testujemy: klas Tailwinda, animacji Motion, wnętrza bibliotek, każdego komponentu UI.
 - Sieć na granicy przez MSW (`src/test/msw/`): domyślne handlery dla gościa i CSRF, w teście tylko `server.use(...)` dla endpointu, którego dotyczy przypadek; nieobsłużone żądanie = błąd testu. `vi.stubGlobal('fetch')` tylko w testach samego `shared/api/backend.ts`.

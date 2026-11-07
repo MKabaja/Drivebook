@@ -15,7 +15,7 @@
 | Tailwind, style | `modern-tailwind` | — |
 | semantyka, dostępność, klawiatura | `modern-accessible-html-jsx` | `use-modern-browser-apis` |
 | auth, sesja, CSRF, walidacja wejścia | `web-security` | `/security-review` |
-| komentarz `/** */` nad eksportem | `tsdoc` (treść po polsku) | — |
+| komentarz `/** */` nad eksportem | `tsdoc` (treść po angielsku) | — |
 | `AGENTS.md`, `CLAUDE.md`, `.claude/` | `claude-md-guide` | — |
 | sprzątanie po tasku | `/simplify` | — |
 
