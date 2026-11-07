@@ -43,6 +43,9 @@ function RootLayout() {
 						</Link>
 						{user ? (
 							<>
+								<Link to="/bookings" className={navLink}>
+									My bookings
+								</Link>
 								<span className="max-w-36 truncate text-muted">
 									{user.name}
 								</span>

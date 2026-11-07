@@ -1,7 +1,7 @@
 import { HttpError } from '@/shared/api/http-error';
 import { NetworkError } from '@/shared/api/network-error';
 
-type HttpMethod = 'GET' | 'POST';
+type HttpMethod = 'GET' | 'POST' | 'PATCH';
 type ReadOptions = { signal?: AbortSignal };
 type BackendRequest = {
 	method: HttpMethod;
@@ -11,7 +11,7 @@ type BackendRequest = {
 
 const XSRF_COOKIE_PREFIX = 'XSRF-TOKEN=';
 
-const backend = { get, post };
+const backend = { get, post, patch };
 
 function get(path: string, { signal }: ReadOptions = {}): Promise<unknown> {
 	return send(path, { method: 'GET', signal });
@@ -19,6 +19,10 @@ function get(path: string, { signal }: ReadOptions = {}): Promise<unknown> {
 
 function post(path: string, body?: unknown): Promise<unknown> {
 	return send(path, { method: 'POST', body });
+}
+
+function patch(path: string, body?: unknown): Promise<unknown> {
+	return send(path, { method: 'PATCH', body });
 }
 
 async function send(path: string, request: BackendRequest): Promise<unknown> {
