@@ -69,7 +69,7 @@ function LandingPage() {
 					transition={{ duration: shouldReduceMotion ? 0 : 0.6 }}
 				>
 					<img
-						src="/images/cars/porsche-panamera.jpg"
+						src="/images/hero-porsche-panamera.webp"
 						alt="Black Porsche Panamera on the road"
 						width="1200"
 						height="800"

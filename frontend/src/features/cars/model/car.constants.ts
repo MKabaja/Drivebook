@@ -6,7 +6,7 @@ import type {
 type LabelByTransmission = Record<Transmission, string>;
 type LabelByCategory = Record<CarCategory, string>;
 
-const SEAT_OPTIONS = [2, 4, 5, 7] as const;
+const SEAT_OPTIONS = [2, 4, 5, 7, 8] as const;
 
 const labelByTransmission: LabelByTransmission = {
 	automatic: 'Automatic',
@@ -14,11 +14,13 @@ const labelByTransmission: LabelByTransmission = {
 };
 
 const labelByCategory: LabelByCategory = {
+	city: 'City',
+	compact: 'Compact',
+	family: 'Family',
+	suv: 'SUV',
+	van: 'Van',
+	premium: 'Premium',
 	sport: 'Sport',
-	grand_tourer: 'Grand tourer',
-	muscle: 'Muscle car',
-	sedan: 'Sedan',
-	estate: 'Estate',
 };
 
 export { labelByCategory, labelByTransmission, SEAT_OPTIONS };

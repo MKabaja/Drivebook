@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Transmission $transmission
  * @property CarCategory $category
  * @property int $daily_rate_in_grosze
- * @property string $image_path
+ * @property string $image_path path on the public disk without the width suffix and extension, e.g. `cars/bmw-m5`
  */
 class Car extends Model
 {

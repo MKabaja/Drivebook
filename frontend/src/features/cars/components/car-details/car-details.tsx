@@ -44,10 +44,12 @@ function CarDetails({ car, dates }: CarDetailsProps) {
 				<figure className={media}>
 					<img
 						className={image}
-						src={car.image_path}
+						src={car.image_url}
+						srcSet={car.image_srcset}
+						sizes="(min-width: 1280px) 624px, (min-width: 1024px) 48vw, 100vw"
 						alt={car.name}
-						width="900"
-						height="563"
+						width="1280"
+						height="800"
 					/>
 				</figure>
 				<div>

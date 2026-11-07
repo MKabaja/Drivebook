@@ -8,11 +8,13 @@ type Car = z.infer<typeof carSchema>;
 const transmissionSchema = z.enum(['manual', 'automatic']);
 
 const carCategorySchema = z.enum([
+	'city',
+	'compact',
+	'family',
+	'suv',
+	'van',
+	'premium',
 	'sport',
-	'grand_tourer',
-	'muscle',
-	'sedan',
-	'estate',
 ]);
 
 const rentalPriceSchema = z.object({
@@ -30,7 +32,8 @@ const carSchema = z.object({
 	transmission: transmissionSchema,
 	category: carCategorySchema,
 	daily_rate_in_grosze: z.number().int().positive(),
-	image_path: z.string().startsWith('/'),
+	image_url: z.string().startsWith('/'),
+	image_srcset: z.string().min(1),
 	price: rentalPriceSchema.optional(),
 	is_available: z.boolean().optional(),
 });

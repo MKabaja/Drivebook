@@ -17,7 +17,7 @@ test('car details without dates have no rental fields', function () {
 
     $this->getJson("/api/cars/{$car->id}")
         ->assertOk()
-        ->assertExactJsonStructure(['data' => ['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path']]);
+        ->assertExactJsonStructure(['data' => ['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset']]);
 });
 
 test('car details price free dates', function () {
@@ -26,7 +26,7 @@ test('car details price free dates', function () {
     $this->getJson("/api/cars/{$car->id}?starts_on=2030-06-10&ends_on=2030-06-13")
         ->assertOk()
         ->assertExactJsonStructure(['data' => [
-            'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path',
+            'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset',
             'price' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
             'is_available', 'alternative_dates',
         ]])
@@ -65,7 +65,7 @@ test('busy car suggests the next rental of equal length', function () {
     $this->getJson("/api/cars/{$car->id}?starts_on=2030-06-10&ends_on=2030-06-13")
         ->assertOk()
         ->assertExactJsonStructure(['data' => [
-            'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path',
+            'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset',
             'price' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
             'is_available',
             'alternative_dates' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
@@ -99,7 +99,7 @@ test('busy car without a free slot returns null with the full response shape', f
     $this->getJson("/api/cars/{$car->id}?starts_on=2030-06-10&ends_on=2030-06-13")
         ->assertOk()
         ->assertExactJsonStructure(['data' => [
-            'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path',
+            'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset',
             'price' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
             'is_available', 'alternative_dates',
         ]])

@@ -19,9 +19,9 @@ class CarFactory extends Factory
             'name' => 'Porsche Panamera',
             'seats' => 4,
             'transmission' => Transmission::Automatic,
-            'category' => CarCategory::GrandTourer,
+            'category' => CarCategory::Premium,
             'daily_rate_in_grosze' => 64900,
-            'image_path' => '/images/cars/porsche-panamera.jpg',
+            'image_path' => 'cars/porsche-panamera',
         ];
     }
 }

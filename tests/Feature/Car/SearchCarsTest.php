@@ -19,10 +19,10 @@ test('guests browse the fleet without rental fields', function () {
     $response = $this->getJson('/api/cars');
 
     $response->assertOk()->assertExactJsonStructure([
-        'data' => ['*' => ['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path']],
+        'data' => ['*' => ['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset']],
         'links' => ['first', 'last', 'prev', 'next'],
         'meta' => ['current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'],
-    ])->assertJsonPath('data.0.category', 'grand_tourer');
+    ])->assertJsonPath('data.0.category', 'premium');
     expect($response->json('data.*.id'))->toBe($cars->modelKeys());
 });
 
@@ -55,7 +55,7 @@ test('rental dates hide cars booked on them and respect half-open boundaries', f
     $response->assertOk()
         ->assertExactJsonStructure([
             'data' => ['*' => [
-                'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path',
+                'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset',
                 'price' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
                 'is_available', 'alternative_dates',
             ]],

@@ -9,9 +9,11 @@ function makeCar(overrides: CarOverrides = {}): Car {
 		name: 'Ford Mustang',
 		seats: 4,
 		transmission: 'manual',
-		category: 'muscle',
+		category: 'sport',
 		daily_rate_in_grosze: 44900,
-		image_path: '/images/cars/ford-mustang.jpg',
+		image_url: '/storage/cars/ford-mustang-1280.webp',
+		image_srcset:
+			'/storage/cars/ford-mustang-640.webp 640w, /storage/cars/ford-mustang-1280.webp 1280w',
 		...overrides,
 	};
 }

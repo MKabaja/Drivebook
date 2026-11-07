@@ -37,10 +37,12 @@ function CarCard({ car, dates }: CarCardProps) {
 			<div className={media}>
 				<img
 					className={image}
-					src={car.image_path}
+					src={car.image_url}
+					srcSet={car.image_srcset}
+					sizes="(min-width: 1280px) 400px, (min-width: 768px) 50vw, 100vw"
 					alt=""
-					width="900"
-					height="563"
+					width="640"
+					height="400"
 					loading="lazy"
 				/>
 				<span className={badge}>{labelByCategory[car.category]}</span>
