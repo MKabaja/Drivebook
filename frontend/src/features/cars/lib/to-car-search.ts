@@ -5,8 +5,8 @@ import {
 } from '@/features/cars/model/car-search.schemas';
 
 /**
- * Zamienia wartości formularza filtrów na wyszukiwanie w URL: puste pola znikają, liczba miejsc staje się
- * liczbą, a strona wraca na pierwszą (bez `page`).
+ * Converts filter form values into the URL search: empty fields are dropped, seats become a number
+ * and the page resets to the first one (no `page`).
  */
 function toCarSearch(filters: CarFilterValues): CarSearch {
 	return carSearchSchema.parse({

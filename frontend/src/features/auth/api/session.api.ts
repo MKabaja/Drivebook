@@ -7,8 +7,8 @@ type Session = {
 };
 
 /**
- * Pamięta użytkownika po pierwszym `loadUser` — kolejne nawigacje nie pytają API.
- * Po logowaniu i wylogowaniu wywołaj `setUser`, a potem `router.invalidate()`.
+ * Creates a session that remembers the user after the first `loadUser`, so later navigations skip the API.
+ * After sign-in and sign-out call `setUser`, then `router.invalidate()`.
  */
 function createSession(): Session {
 	let knownUser: User | null | undefined;

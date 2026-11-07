@@ -6,10 +6,11 @@ type RentalDateField = keyof RentalDatesSearch;
 type RentalDatesError = { field: RentalDateField; message: string };
 
 /**
- * Sprawdza parę dat wynajmu według reguł backendu: obie albo żadna, odbiór od jutra do horyzontu
- * rezerwacji, zwrot po odbiorze i nie dłużej niż limit dób. Zwraca pierwszy błąd albo `undefined`.
+ * Checks a rental date pair against the backend rules: both or neither, pick-up from tomorrow up to the
+ * booking horizon, return after pick-up and within the rental day limit.
  *
- * @param today - dzisiejsza data w Warszawie (`YYYY-MM-DD`)
+ * @param today - today's date in Warsaw (`YYYY-MM-DD`)
+ * @returns the first violated rule, or `undefined` when the pair is valid or empty
  */
 function findRentalDatesError(
 	{ starts_on, ends_on }: RentalDatesSearch,

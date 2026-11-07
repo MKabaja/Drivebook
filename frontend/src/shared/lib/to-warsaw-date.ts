@@ -8,8 +8,8 @@ const calendarDateFormat = new Intl.DateTimeFormat('en-CA', {
 });
 
 /**
- * Zwraca datę kalendarzową (`YYYY-MM-DD`), jaka w chwili `instant` obowiązuje w Warszawie — nie w UTC
- * ani w strefie przeglądarki.
+ * Returns the calendar date (`YYYY-MM-DD`) in Warsaw at the moment `instant`, not in UTC
+ * or the browser's time zone.
  */
 function toWarsawDate(instant: Date): string {
 	const parts = calendarDateFormat.formatToParts(instant);

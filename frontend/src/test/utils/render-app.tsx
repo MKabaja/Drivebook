@@ -11,8 +11,8 @@ import { createSession } from '@/features/auth/api/session.api';
 import { routeTree } from '@/routeTree.gen';
 
 /**
- * Renderuje całą aplikację na prawdziwym routerze z pamięciową historią, startując od `path`.
- * Każde wywołanie tworzy nową sesję, więc testy nie dzielą zalogowanego użytkownika.
+ * Renders the whole app on a real router with in-memory history, starting at `path`.
+ * Each call creates a new session, so tests never share a signed-in user.
  */
 function renderApp(path: string) {
 	const router = createRouter({

@@ -2,10 +2,10 @@ import { findRentalDatesError } from '@/features/cars/lib/find-rental-dates-erro
 import type { RentalDatesSearch } from '@/features/cars/model/car-search.schemas';
 
 /**
- * Usuwa z wyszukiwania obie daty, gdy para nie spełnia reguł wynajmu (np. zapisany link z wczorajszym
- * odbiorem) — strona ładuje się wtedy bez terminu zamiast kończyć się błędem 422 z API.
+ * Removes both dates from the search when the pair breaks the rental rules (e.g. a saved link with
+ * yesterday's pick-up), so the page loads without dates instead of failing with a 422 from the API.
  *
- * @param today - dzisiejsza data w Warszawie (`YYYY-MM-DD`)
+ * @param today - today's date in Warsaw (`YYYY-MM-DD`)
  */
 function keepValidRentalDates<Search extends RentalDatesSearch>(
 	search: Search,
