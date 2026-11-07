@@ -19,11 +19,32 @@ test('guests browse the fleet without rental fields', function () {
     $response = $this->getJson('/api/cars');
 
     $response->assertOk()->assertExactJsonStructure([
-        'data' => ['*' => ['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path']],
+        'data' => ['*' => ['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset']],
         'links' => ['first', 'last', 'prev', 'next'],
         'meta' => ['current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'],
-    ])->assertJsonPath('data.0.category', 'grand_tourer');
+    ])->assertJsonPath('data.0.category', 'premium');
     expect($response->json('data.*.id'))->toBe($cars->modelKeys());
+});
+
+test('cars come cheapest first, ties by id', function () {
+    $a = Car::factory()->create(['daily_rate_in_grosze' => 30000]);
+    $b = Car::factory()->create(['daily_rate_in_grosze' => 10000]);
+    $c = Car::factory()->create(['daily_rate_in_grosze' => 10000]);
+
+    $response = $this->getJson('/api/cars');
+
+    $response->assertOk();
+    expect($response->json('data.*.id'))->toBe([$b->id, $c->id, $a->id]);
+});
+
+test('car exposes responsive image urls', function () {
+    Car::factory()->create(['image_path' => 'cars/kia-sportage']);
+
+    $response = $this->getJson('/api/cars');
+
+    $response->assertOk()
+        ->assertJsonPath('data.0.image_url', '/storage/cars/kia-sportage-1280.webp')
+        ->assertJsonPath('data.0.image_srcset', '/storage/cars/kia-sportage-640.webp 640w, /storage/cars/kia-sportage-1280.webp 1280w');
 });
 
 test('filters treat seats as a minimum and combine with transmission', function () {
@@ -55,7 +76,7 @@ test('rental dates hide cars booked on them and respect half-open boundaries', f
     $response->assertOk()
         ->assertExactJsonStructure([
             'data' => ['*' => [
-                'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path',
+                'id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset',
                 'price' => ['starts_on', 'ends_on', 'rental_days', 'daily_rate_in_grosze', 'total_price_in_grosze'],
                 'is_available', 'alternative_dates',
             ]],

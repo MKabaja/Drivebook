@@ -3,8 +3,8 @@ import { setupServer } from 'msw/node';
 import { defaultHandlers } from '@/test/msw/handlers';
 
 /**
- * Serwer MSW wspólny dla wszystkich testów — start, reset i zamknięcie w `test/setup.ts`.
- * Żądanie bez handlera wywraca test, więc każdy test deklaruje potrzebne odpowiedzi przez `server.use(...)`.
+ * MSW server shared by all tests; started, reset and closed in `test/setup.ts`.
+ * A request without a handler fails the test, so each test declares the responses it needs with `server.use(...)`.
  */
 const server = setupServer(...defaultHandlers);
 

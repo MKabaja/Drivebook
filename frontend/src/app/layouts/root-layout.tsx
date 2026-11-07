@@ -38,6 +38,9 @@ function RootLayout() {
 						drivebook<span className="text-accent">.</span>
 					</Link>
 					<nav className={nav} aria-label="Main navigation">
+						<Link to="/cars" className={navLink}>
+							Cars
+						</Link>
 						{user ? (
 							<>
 								<span className="max-w-36 truncate text-muted">

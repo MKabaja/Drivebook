@@ -5,7 +5,7 @@ import type { User } from '@/features/auth/model/user.schemas';
 import { resource } from '@/test/msw/envelopes';
 
 /**
- * Endpointy, które trafia każda strona: gość bez sesji i pobranie ciasteczka CSRF.
+ * Endpoints every page hits: a guest without a session and the CSRF cookie request.
  */
 const defaultHandlers = [
 	http.get('/api/user', () =>
@@ -18,7 +18,7 @@ const defaultHandlers = [
 ];
 
 /**
- * Handler do `server.use(...)`: `GET /api/user` zwraca zalogowanego użytkownika zamiast 401.
+ * Returns a handler for `server.use(...)` that makes `GET /api/user` respond with the signed-in user instead of 401.
  */
 function signedInAs(user: User) {
 	return http.get('/api/user', () => HttpResponse.json(resource(user)));

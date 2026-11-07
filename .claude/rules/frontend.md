@@ -19,7 +19,7 @@ src/
 │   ├── api/<res>.api.ts         czyste funkcje HTTP: backend.* + parse Zod + odpakowanie { data }; bez Reacta
 │   ├── model/<res>.schemas.ts   schematy Zod + `type X = z.infer<…>`; <res>.constants.ts — etykiety, limity
 │   ├── lib/<function-name>.ts   czyste funkcje (daty, ceny, mapowanie błędów); plik = nazwa funkcji
-│   ├── components/<name>/       <name>.tsx, <name>.styles.ts, <name>.test.tsx, części <name>.<part>.tsx
+│   ├── components/<name>/       <name>.tsx, <name>.styles.ts, części <name>.<part>.tsx (testy w components/__tests__/)
 │   └── pages/<name>-page.tsx    tylko gdy ekran składa kilka komponentów
 ├── shared/
 │   ├── api/                     backend.ts, http-error.ts, network-error.ts, envelopes.ts (resourceOf, pageOf)
@@ -60,7 +60,7 @@ src/
 - React: nazwane importy z `react`; nie trzymaj w stanie tego, co da się obliczyć; `useEffect` tylko do synchronizacji z systemem zewnętrznym; bez automatycznego `useMemo`/`useCallback`/`memo` (brak React Compilera — memoizacja tylko po wykazaniu potrzeby). Formularze: natywne `<form>` + `FormData` + ograniczenia HTML.
 - Hook tylko, gdy potrzebuje stanu, efektu lub kontekstu; inaczej funkcja w `lib/`. Hook ma nazwany typ zwracany.
 - Komponent > ~150 linii lub z kilkoma odpowiedzialnościami → podziel na części w `components/`.
-- Bez komentarzy w kodzie. TSDoc tylko na eksportowanym, reużywalnym API (skill `tsdoc`, po polsku), o tym, czego nie widać w sygnaturze.
+- Bez komentarzy w kodzie. TSDoc tylko na eksportowanym, reużywalnym API (skill `tsdoc`, po angielsku — jak cały kod), o tym, czego nie widać w sygnaturze.
 - Teksty UI po angielsku (etykiety, komunikaty, dane demo), w komponentach lub `*.constants.ts` — bez i18n.
 - Każdy ekran obsługuje loading (`pendingComponent`), error (`errorComponent`), empty i 404 (`notFound()`).
 - Dostępność: semantyczny HTML, `<label>` dla pól, focus po nawigacji/akcji nie ląduje na `<body>`, komunikaty statusu przez `role="status"`/`aria-live`. Jeden link na kartę (cała karta klikalna przez pseudo-element).

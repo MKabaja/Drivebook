@@ -2,7 +2,7 @@
 
 Portfolio junior fullstack: rezerwacja aut jednej wypożyczalni. DriveBook całkowicie zastępuje dawny RoomBook (sale) — w kodzie, schemacie, testach i dokumentacji nie zostaje po nim śladu; nazwa katalogu/repo zmieni się na końcu refaktoru. Plan i bieżący task: `docs/plan-refaktoru.md`.
 Stack: Laravel 13 + PHP ^8.5, Sanctum 4 (sesyjne SPA), MySQL 8.4, Pest 4, Larastan (poziom 6), Pint. Frontend w `frontend/`: React 19 + TypeScript 6 strict, Vite 8, Tailwind 4, TanStack Router (file-based), Zod 4, Biome 2, Vitest + Testing Library, Lucide, Motion.
-Celowo bez: TanStack Query, axios, Redux/Zustand, React Hook Form, shadcn, cn/clsx/cva, bibliotek dat. Dodanie którejkolwiek wymaga zgody.
+Celowo bez: Prettier i ESLint (formatuje i lintuje tylko Biome), TanStack Query, axios, Redux/Zustand, React Hook Form, shadcn, cn/clsx/cva, bibliotek dat. Dodanie którejkolwiek wymaga zgody.
 
 <!-- Utrzymanie: < 200 linii, każda linia ma zapobiegać realnemu błędowi. Szczegóły części kodu → .claude/rules/ (paths:).
      docs/ jest gitignorowany — nic potrzebnego w każdej sesji nie może żyć wyłącznie w docs/. -->
@@ -18,8 +18,9 @@ Backend przez Sail (`./vendor/bin/sail up -d`): testy, analiza i lint tylko w ko
 
 Frontend (Node 24 z `frontend/.nvmrc`):
 
-- `npm --prefix frontend run dev` — Vite na 5174, proxy `/api` i `/sanctum` do Laravela
-- `npm --prefix frontend run lint:fix` — Biome: lint + format + importy (**zapisuje**); `lint` bez zapisu
+- `npm --prefix frontend run dev` — Vite na 5174, proxy `/api`, `/sanctum` i `/storage` do Laravela
+- Po świeżej bazie: `./vendor/bin/sail artisan storage:link` i `./vendor/bin/sail artisan db:seed` — zdjęcia aut serwuje dysk `public`
+- `npm --prefix frontend run lint:fix` — Biome: lint + format + importy (**zapisuje**); `lint` bez zapisu; `format` — tylko formatowanie (**zapisuje**)
 - `npm --prefix frontend run typecheck` — `tsc` dla `tsconfig.app.json` i `tsconfig.node.json`
 - `npm --prefix frontend test` — Vitest jednorazowo; jeden plik: `npm --prefix frontend test -- src/<ścieżka>.test.tsx`
 - `npm --prefix frontend run build` — typecheck + `vite build`

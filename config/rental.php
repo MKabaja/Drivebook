@@ -29,4 +29,6 @@ return [
 
     'bookings_per_page' => 15,
 
+    'car_image_widths' => [640, 1280],
+
 ];

@@ -30,6 +30,7 @@ final class CarService
         $requestedDates = $search->dates;
 
         return $this->carsMatching($search)
+            ->orderBy('daily_rate_in_grosze')
             ->orderBy('id')
             ->paginate(Config::integer('rental.cars_per_page'), page: $search->page)
             ->withQueryString()

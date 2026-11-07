@@ -9,6 +9,8 @@ use App\DataTransferObjects\RentalAvailability;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 
 class CarResource extends JsonResource
 {
@@ -38,7 +40,8 @@ class CarResource extends JsonResource
      *     transmission: string,
      *     category: string,
      *     daily_rate_in_grosze: int,
-     *     image_path: string,
+     *     image_url: string,
+     *     image_srcset: string,
      * }
      */
     private function carFields(Car $car): array
@@ -50,8 +53,29 @@ class CarResource extends JsonResource
             'transmission' => $car->transmission->value,
             'category' => $car->category->value,
             'daily_rate_in_grosze' => $car->daily_rate_in_grosze,
-            'image_path' => $car->image_path,
+            ...$this->imageFields($car),
         ];
+    }
+
+    /** @return array{image_url: string, image_srcset: string} */
+    private function imageFields(Car $car): array
+    {
+        /** @var non-empty-list<int> $widthsInPixels */
+        $widthsInPixels = Config::array('rental.car_image_widths');
+        $srcsetEntries = array_map(
+            fn (int $widthInPixels): string => $this->imageUrl($car, $widthInPixels)." {$widthInPixels}w",
+            $widthsInPixels,
+        );
+
+        return [
+            'image_url' => $this->imageUrl($car, max($widthsInPixels)),
+            'image_srcset' => implode(', ', $srcsetEntries),
+        ];
+    }
+
+    private function imageUrl(Car $car, int $widthInPixels): string
+    {
+        return Storage::disk('public')->url("{$car->image_path}-{$widthInPixels}.webp");
     }
 
     /**

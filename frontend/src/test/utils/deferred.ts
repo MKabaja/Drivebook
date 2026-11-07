@@ -4,8 +4,8 @@ type Deferred<Value> = {
 };
 
 /**
- * Tworzy obietnicę rozwiązywaną ręcznie w teście, by wstrzymać odpowiedź handlera MSW
- * w wybranym momencie (`await deferred.promise` w handlerze).
+ * Creates a promise the test resolves by hand, to hold an MSW handler's response
+ * until a chosen moment (`await deferred.promise` inside the handler).
  */
 function createDeferred<Value = void>(): Deferred<Value> {
 	let resolve: (value: Value) => void = () => {};

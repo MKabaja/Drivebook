@@ -40,5 +40,5 @@ test('booked car is embedded without rental price fields', function () {
 
     $response->assertOk();
     expect(array_keys($response->json('data.0.car')))
-        ->toEqualCanonicalizing(['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_path']);
+        ->toEqualCanonicalizing(['id', 'name', 'seats', 'transmission', 'category', 'daily_rate_in_grosze', 'image_url', 'image_srcset']);
 });
