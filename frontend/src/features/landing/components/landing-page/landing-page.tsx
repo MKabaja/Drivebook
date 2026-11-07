@@ -26,7 +26,7 @@ function LandingPage() {
 	const shouldReduceMotion = useReducedMotion();
 
 	return (
-		<main id="main" className={shell}>
+		<main id="main" tabIndex={-1} className={shell}>
 			<section className={hero} aria-labelledby="welcome-title">
 				<img
 					src="/images/grid-texture.png"

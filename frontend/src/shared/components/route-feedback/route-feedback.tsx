@@ -28,7 +28,7 @@ function RouteError({ error, reset }: ErrorComponentProps) {
 	}
 
 	return (
-		<main id="main" className={`${shell} ${page}`}>
+		<main id="main" tabIndex={-1} className={`${shell} ${page}`}>
 			<h1 className={title}>We couldn't load this page</h1>
 			<p className={lead} role="alert">
 				{describeError(error)}
@@ -53,7 +53,7 @@ function RouteError({ error, reset }: ErrorComponentProps) {
 
 function NotFoundPage() {
 	return (
-		<main id="main" className={`${shell} ${page}`}>
+		<main id="main" tabIndex={-1} className={`${shell} ${page}`}>
 			<h1 className={title}>Page not found</h1>
 			<Link to="/" className={`${primary} mt-6`}>
 				Back to the home page

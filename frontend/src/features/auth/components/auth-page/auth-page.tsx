@@ -72,7 +72,7 @@ function AuthPage({ mode, redirectTo }: AuthPageProps) {
 	}
 
 	return (
-		<main id="main" className={`${shell} ${page}`}>
+		<main id="main" tabIndex={-1} className={`${shell} ${page}`}>
 			<div className={container}>
 				<p className={eyebrow}>
 					<LockKeyhole size={16} className="mr-2 inline" aria-hidden="true" />
