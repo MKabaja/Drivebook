@@ -1,0 +1,49 @@
+@layer base {
+	:root {
+		color-scheme: dark;
+	}
+	body {
+		margin: 0;
+		background: var(--color-canvas);
+		color: var(--color-copy);
+		font-family: var(--font-sans);
+	}
+	button,
+	select {
+		cursor: pointer;
+	}
+	button,
+	a,
+	select {
+		-webkit-tap-highlight-color: transparent;
+	}
+	:focus-visible {
+		outline: 3px solid var(--color-accent);
+		outline-offset: 5px;
+	}
+	[tabindex="-1"]:focus-visible {
+		outline: none;
+	}
+	::selection {
+		color: var(--color-canvas);
+		background: var(--color-accent);
+	}
+	dialog {
+		max-height: 90dvh;
+		overflow-y: auto;
+	}
+	dialog::backdrop {
+		background: rgb(0 0 0 / 75%);
+		backdrop-filter: blur(8px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation: none;
+		transition: none;
+		scroll-behavior: auto;
+	}
+}

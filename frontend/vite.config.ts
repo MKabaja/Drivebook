@@ -1,20 +1,25 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { fileURLToPath } from 'node:url';
+
 import tailwindcss from '@tailwindcss/vite';
-import { fileURLToPath, URL } from 'node:url';
-
-const alias = (p: string) => fileURLToPath(new URL(p, import.meta.url));
-
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
-  server: {
-    port: 5174,
-    strictPort: true
-  },
-
-  resolve: {
-    alias: {
-      '@': alias('./src')
-    }
-  }
+	plugins: [
+		tanstackRouter({ target: 'react', autoCodeSplitting: true }),
+		react(),
+		tailwindcss(),
+	],
+	resolve: {
+		alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+	},
+	server: {
+		port: 5174,
+		strictPort: true,
+		proxy: {
+			'/api': { target: 'http://127.0.0.1:8000' },
+			'/sanctum': { target: 'http://127.0.0.1:8000' },
+			'/storage': { target: 'http://127.0.0.1:8000' },
+		},
+	},
 });

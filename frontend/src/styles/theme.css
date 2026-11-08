@@ -1,48 +1,13 @@
 @theme {
-    --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-    --font-mono: "DM Mono", ui-monospace, monospace;
-
-    --color-bg: #0f172a;
-    --color-surface: #1e293b;
-    --color-surface2: #263348;
-    --color-elevated: #2d3a4f;
-    --color-border: #334155;
-    --color-hover: #3b4a63;
-
-    --color-primary: #6366f1;
-    --color-primary-hover: #4f46e5;
-    --color-primary-light: #818cf8;
-    --color-primary-muted: rgba(99, 102, 241, 0.12);
-
-    --color-accent: #f59e0b;
-    --color-accent-hover: #d97706;
-    --color-accent-light: #fbbf24;
-
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #94a3b8;
-    --color-text-muted: #64748b;
-
-    --color-success: #22c55e;
-    --color-error: #ef4444;
-    --color-warning: #f59e0b;
-    --color-info: #6366f1;
-
-    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.55);
-
-    --shadow-raised-sm:
-        0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 16px rgba(0, 0, 0, 0.5);
-    --shadow-raised-md:
-        0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 32px rgba(0, 0, 0, 0.55);
-
-    --shadow-glow:
-        0 0 0 1px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.12);
-    --shadow-glow-strong:
-        0 0 0 1px rgba(99, 102, 241, 0.35), 0 0 40px rgba(99, 102, 241, 0.22);
-
-    --z-canvas: 0;
-    --z-overlay: 10;
-    --z-header: 20;
-    --z-dropdown: 50;
+	--font-sans: "Inter", "Segoe UI", sans-serif;
+	--color-canvas: #101310;
+	--color-panel: #191e19;
+	--color-copy: #f3f5ed;
+	--color-muted: #b4beaf;
+	--color-accent: #d6f56b;
+	--color-line: #363f35;
+	--color-control: #7b8875;
+}
+@theme {
+	--color-error: #ffaaa3;
 }

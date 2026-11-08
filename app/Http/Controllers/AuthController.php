@@ -6,60 +6,55 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\UserResource;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function register(RegisterRequest $request): JsonResponse
+    public function __construct(private readonly AuthService $authService) {}
+
+    public function register(RegisterRequest $request): UserResource
     {
-        $payload = $request->validated();
+        $payload = $request->safe();
+        $user = $this->authService->register(
+            $payload->string('name')->toString(),
+            $payload->string('email')->toString(),
+            $payload->string('password')->toString(),
+        );
 
-        $user = User::create([
-            'name' => $payload['name'],
-            'email' => $payload['email'],
-            'password' => $payload['password'],
-        ]);
+        Auth::guard('web')->login($user);
+        $request->session()->regenerate();
 
-        $token = $user->createToken('auth')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201);
-
+        return new UserResource($user);
     }
 
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): UserResource
     {
-        $credentials = $request->validated();
+        $payload = $request->safe();
+        $user = $this->authService->authenticate(
+            $payload->string('email')->toString(),
+            $payload->string('password')->toString(),
+        );
 
-        $loginSuccessful = Auth::attempt([
-            'email' => $credentials['email'],
-            'password' => $credentials['password'],
-        ]);
+        Auth::guard('web')->login($user);
+        $request->session()->regenerate();
 
-        if (! $loginSuccessful) {
-            return response()->json([
-                'message' => 'Invalid credentials',
-            ], 401);
-        }
+        return new UserResource($user);
+    }
 
-        $user = $request->user();
-        $token = $user->createToken('auth')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 200);
+    public function user(Request $request): UserResource
+    {
+        return new UserResource($request->user());
     }
 
     public function logout(Request $request): Response
     {
-        $request->user()->currentAccessToken()->delete();
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->noContent();
     }
