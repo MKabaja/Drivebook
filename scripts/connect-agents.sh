@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Podłącza RoomBook do claude-config na nowym komputerze.
+# Podłącza DriveBook do claude-config na nowym komputerze.
 # Claude Code: skille/agenci/komendy globalnie przez install.sh claude-config, pamięć przez connect-project.sh.
 # Inni agenci (Codex): symlinki .ai/shared, .ai/memory i .agents/skills (gitignorowane).
 set -euo pipefail
@@ -7,7 +7,7 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_DIR="$(cd "${1:-${PROJECT_DIR}/../claude-config}" && pwd)"
 
-bash "${CONFIG_DIR}/connect-project.sh" "${PROJECT_DIR}" roombook
+bash "${CONFIG_DIR}/connect-project.sh" "${PROJECT_DIR}" drivebook
 
 link() {
   local target="$1" link_path="$2"
@@ -21,7 +21,7 @@ link() {
 }
 
 link "${CONFIG_DIR}" "${PROJECT_DIR}/.ai/shared"
-link "${CONFIG_DIR}/memory/roombook" "${PROJECT_DIR}/.ai/memory"
+link "${CONFIG_DIR}/memory/drivebook" "${PROJECT_DIR}/.ai/memory"
 link "${CONFIG_DIR}/skills" "${PROJECT_DIR}/.agents/skills"
 
 echo 'Gotowe. Uruchom nową sesję agenta.'

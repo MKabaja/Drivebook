@@ -2,7 +2,22 @@
 
 # DriveBook
 
-Rezerwacja aut jednej wypożyczalni: publiczny katalog z filtrem terminu, wycena konkretnego auta, checkout z symulowaną płatnością i lista własnych rezerwacji. Projekt portfolio fullstack: JSON API w Laravelu i SPA w React.
+[![Tests](https://github.com/MKabaja/DriveBook/actions/workflows/tests.yml/badge.svg)](https://github.com/MKabaja/DriveBook/actions/workflows/tests.yml)
+[![PHPStan](https://github.com/MKabaja/DriveBook/actions/workflows/phpstan.yml/badge.svg)](https://github.com/MKabaja/DriveBook/actions/workflows/phpstan.yml)
+[![Code Style](https://github.com/MKabaja/DriveBook/actions/workflows/pint.yml/badge.svg)](https://github.com/MKabaja/DriveBook/actions/workflows/pint.yml)
+[![Frontend](https://github.com/MKabaja/DriveBook/actions/workflows/frontend.yml/badge.svg)](https://github.com/MKabaja/DriveBook/actions/workflows/frontend.yml)
+![PHP](https://img.shields.io/badge/PHP-8.5-8892BF?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+
+Rezerwacja aut jednej wypożyczalni: JSON API w Laravelu i SPA w React.
+
+## O projekcie
+
+DriveBook pozwala przejrzeć flotę, sprawdzić cenę auta na wybrany termin i zarezerwować je przez checkout z symulowaną płatnością. Gość loguje się dopiero wtedy, gdy jest to potrzebne, a zalogowany użytkownik widzi własne rezerwacje i może je anulować.
+
+To projekt portfolio fullstack. Domena jest celowo niewielka, żeby uwaga szła na miejsca, w których łatwo o błąd: daty kalendarzowe i strefy czasowe, dokładne ceny, dwie osoby rezerwujące to samo auto w tej samej chwili oraz bezpieczna sesja w przeglądarce.
 
 ## Funkcje
 
@@ -46,6 +61,30 @@ Otwórz <http://localhost:5174>. Vite przekazuje `/api`, `/sanctum` i `/storage`
 
 Seeder tworzy 18 aut ze zdjęciami i nie tworzy kont, więc zarejestruj się w aplikacji.
 
+Uruchomienie na własnym serwerze opisuje [deploy.md](deploy.md).
+
+### Rozwiązywanie problemów
+
+**`ports are not available` przy `sail up`.** Port zajmuje coś na hoście. Zatrzymaj tę usługę. Dla MySQL możesz zamiast tego ustawić inny `FORWARD_DB_PORT` w `.env`. Port 8000 musi zostać, bo wskazuje na niego proxy Vite.
+
+**`Access denied` dla użytkownika bazy.** MySQL tworzy użytkownika tylko przy pustym wolumenie, więc później zmienione dane są ignorowane. `./vendor/bin/sail down -v` tworzy wolumen od nowa i **usuwa lokalną bazę**. Potem powtórz kroki `sail up` i `migrate --seed`.
+
+**Brak zdjęć aut.** Uruchom `./vendor/bin/sail artisan storage:link` i upewnij się, że seeder się wykonał.
+
+**419 lub 401 zaraz po zalogowaniu.** Otwórz aplikację pod adresem z `SANCTUM_STATEFUL_DOMAINS`, domyślnie `localhost:5174`.
+
+### Zmienne środowiskowe
+
+| Zmienna                    | Opis                                                               |
+| -------------------------- | ------------------------------------------------------------------ |
+| `APP_KEY`                  | Generowany przez `artisan key:generate`                            |
+| `APP_PORT`                 | Port kontenera Laravela, lokalnie `8000`                           |
+| `DB_DATABASE`              | Baza deweloperska. Testy zawsze używają `testing`                  |
+| `DB_USERNAME`, `DB_PASSWORD` | Dane dostępu do bazy, stosowane przy tworzeniu wolumenu          |
+| `FRONTEND_URL`             | Jedyny origin dopuszczony przez CORS                               |
+| `SANCTUM_STATEFUL_DOMAINS` | Hosty korzystające z uwierzytelniania sesją                        |
+| `SESSION_SECURE_COOKIE`    | Na produkcji `true`, żeby ciasteczko szło tylko przez HTTPS        |
+
 ## Reguły domeny
 
 **Daty**
@@ -74,19 +113,128 @@ Płatność jest symulowana w przeglądarce. Dane karty nie trafiają do API, kt
 
 Przeterminowana karta jest odrzucana. W pozostałych przypadkach podaj dowolną przyszłą datę `MM/YY`. Gdy rezerwacja nie uda się po zaakceptowanej płatności (409, 422 lub 401), strona informuje, że nie pobrano opłaty.
 
-## Architektura
+## Architektura backendu
 
-```
-FormRequest → Controller → DTO readonly → Service → Eloquent → JsonResource
+```text
+Route → FormRequest (walidacja) → Controller (HTTP, autoryzacja) → DTO readonly
+      → Service (operacja biznesowa, transakcja) → Eloquent → JsonResource
 ```
 
 - **Osobne API i SPA.** Backend zwraca wyłącznie JSON.
-- **Sesje Sanctum zamiast tokenów.** Sesja jest w ciasteczku httpOnly z ochroną CSRF, więc skrypty na stronie nie mają dostępu do poświadczeń.
-- **Brak podwójnych rezerwacji.** Zapis i anulowanie działają w jednej transakcji i zawsze najpierw blokują wiersz `Car`. Zapis potem sprawdza konflikty i tworzy rezerwację. Osobny test na MySQL uruchamia dwa prawdziwe procesy na ten sam termin i oczekuje dokładnie jednej rezerwacji.
+- **Zapis rezerwacji.** Jedna transakcja blokuje wiersz `Car`, sprawdza konflikty i zapisuje rezerwację, zawsze w tej kolejności. Anulowanie najpierw zakłada tę samą blokadę.
 - **Pipeline walidatorów.** Reguły rezerwacji to osobne walidatory za jednym interfejsem: kolejność dat, okno odbioru, długość wynajmu, dostępność. Tanie sprawdzenia idą pierwsze, a zapytanie do bazy na końcu.
 - **Wyjątki domenowe.** Serwisy nigdy nie dostają żądania ani nie zwracają odpowiedzi. Zmieniona stawka rzuca `DailyRateChanged`, a `bootstrap/app.php` mapuje go na 409.
-- **Frontend feature-first.** `frontend/src/features/<feature>/{api,model,lib,components,pages}`, a granice importów pilnuje Biome. W `shared/` jest tylko kod bez wiedzy o feature'ach.
-- **Loadery routera zamiast biblioteki do pobierania danych.** Dane stron pochodzą z loaderów TanStack Routera, a stanem filtrów i paginacji jest URL. Każda odpowiedź jest parsowana Zodem.
+- **Stałe domeny w jednym miejscu.** Strefa czasowa, godzina odbioru, limity i rozmiary stron są w `config/rental.php`.
+
+## Architektura frontendu
+
+SPA jest podzielone na feature'y. Granic importów pilnuje Biome, więc ich złamanie wywraca lint.
+
+```text
+frontend/src/
+├── app/            # router i główny layout
+├── routes/         # cienkie trasy file-based: walidacja URL, loadery, strażnicy
+├── features/
+│   ├── auth/       # sesja, formularze logowania i rejestracji, bezpieczne przekierowania
+│   ├── bookings/   # checkout, płatność demo, lista rezerwacji i anulowanie
+│   ├── cars/       # katalog, filtry, szczegóły auta, dostępność
+│   └── landing/
+│       # każdy feature: api/, model/, lib/, components/, pages/
+├── shared/         # transport, formatowanie, komponenty pól i stanów tras
+└── test/           # serwer MSW, fabryki, helpery renderowania
+```
+
+`shared/` jest używany przez co najmniej dwa feature'y i nie wie nic o żadnym z nich. Jedyna zależność między feature'ami to `bookings` korzystający z `cars`. Checkout dostaje formularze logowania przez render prop, więc `bookings` nie importuje `auth`.
+
+**Trasy**
+
+| Ścieżka                  | Dostęp      | Strona                                                   |
+| ------------------------ | ----------- | -------------------------------------------------------- |
+| `/`                      | publiczny   | strona główna                                            |
+| `/cars`                  | publiczny   | katalog z filtrami i paginacją                           |
+| `/cars/$carId`           | publiczny   | szczegóły, cena i kolejny wolny termin                   |
+| `/cars/$carId/checkout`  | publiczny   | podsumowanie, logowanie lub rejestracja na miejscu, płatność demo |
+| `/login`, `/register`    | goście      | zalogowani są przekierowywani dalej                      |
+| `/bookings`              | zalogowany  | własne rezerwacje; gość trafia na `/login` i wraca       |
+
+**Przepływ danych**
+
+- Każda trasa waliduje parametry wyszukiwania Zodem, a URL przechowuje stan filtrów i paginacji, więc przefiltrowany widok można udostępnić lub odświeżyć.
+- Loader trasy pobiera dane strony z `AbortSignal` routera, więc wyjście ze strony anuluje żądanie. Po mutacji `router.invalidate()` przeładowuje dane. Nie ma osobnego cache po stronie klienta.
+- Wszystkie żądania idą przez `shared/api/backend.ts`, który dodaje ciasteczka i nagłówek XSRF oraz zamienia błędy na `HttpError` lub `NetworkError`.
+- Każdy `*.api.ts` parsuje odpowiedź Zodem, więc nieoczekiwane dane zatrzymują się na granicy i nie docierają do komponentu.
+
+**Błędy i sesja**
+
+- `describeError` zamienia każdą porażkę w jeden komunikat dla użytkownika, a błędy rezerwacji (409, 422, 401) są obsługiwane tam, gdzie użytkownik może zareagować.
+- Zalogowany użytkownik jest pobierany raz i zapamiętywany, a potem aktualizowany po zalogowaniu i wylogowaniu.
+- Wylogowanie ponawia się raz po nieaktualnym tokenie CSRF.
+- Parametr `redirect` po logowaniu przechodzi przez listę dozwolonych ścieżek, więc spreparowany link nie przeniesie użytkownika na inną stronę.
+
+**Dostępność**
+
+- Link „przejdź do treści”, a fokus po każdej nawigacji trafia na główną treść.
+- Semantyczne formularze z błędami powiązanymi z polami.
+- Animacje respektują `prefers-reduced-motion`.
+- Zdjęcia aut to responsywne obrazy WebP w dwóch szerokościach.
+
+## Struktura projektu
+
+```text
+├── app/
+│   ├── DataTransferObjects/    # readonly obiekty wejścia i wyniku
+│   ├── Enums/                  # status rezerwacji, kategoria, skrzynia
+│   ├── Exceptions/             # wyjątki domenowe
+│   ├── Http/                   # kontrolery, FormRequesty, zasoby JSON
+│   ├── Policies/               # kto może anulować rezerwację
+│   └── Services/
+│       ├── Booking/            # BookingService i pipeline walidatorów
+│       └── Cars/               # katalog, ceny, okno wynajmu, terminy alternatywne
+├── config/rental.php           # stałe domeny
+├── database/                   # migracje, seedery i zdjęcia aut
+├── docker/mysql/               # skrypt inicjalizacji MySQL dla Saila
+├── frontend/                   # SPA w React
+├── tests/
+│   ├── Feature/                # testy HTTP i współbieżności na MySQL
+│   └── Unit/                   # ceny i terminy alternatywne
+└── deploy.md                   # uruchomienie na własnym serwerze
+```
+
+## Schemat bazy
+
+```mermaid
+erDiagram
+    users ||--o{ bookings : places
+    cars ||--o{ bookings : "is booked in"
+
+    users {
+        bigint id PK
+        string name
+        string email "unique"
+        string password
+    }
+    cars {
+        bigint id PK
+        string name
+        tinyint seats
+        string transmission
+        string category
+        int daily_rate_in_grosze
+        string image_path
+    }
+    bookings {
+        bigint id PK
+        bigint car_id FK
+        bigint user_id FK
+        date starts_on
+        date ends_on
+        string status "confirmed or cancelled"
+        int daily_rate_in_grosze "snapshot"
+        bigint total_price_in_grosze "snapshot"
+    }
+```
+
+`bookings` ma indeks `(car_id, starts_on, ends_on)` pod sprawdzanie konfliktów. Klucze obce blokują usuwanie, więc auta ani użytkownika z rezerwacjami nie da się skasować.
 
 ## API
 
@@ -101,7 +249,47 @@ FormRequest → Controller → DTO readonly → Service → Eloquent → JsonRes
 | `POST /api/bookings`             | zalogowany   | `car_id`, `starts_on`, `ends_on`, `expected_daily_rate_in_grosze` |
 | `PATCH /api/bookings/{id}/cancel`| właściciel   | anuluje rezerwację                                  |
 
-Błędy: 401 brak sesji, 403 cudza rezerwacja, 404 brak rekordu, 409 zmieniona stawka, 419 CSRF, 422 walidacja, konflikt terminu, złe dane logowania lub odmowa anulowania, 429 limit żądań.
+| Status | Kiedy                                                                             |
+| ------ | --------------------------------------------------------------------------------- |
+| `401`  | brak sesji                                                                        |
+| `403`  | cudza rezerwacja                                                                  |
+| `404`  | brak rekordu                                                                      |
+| `409`  | zmieniona stawka dobowa                                                           |
+| `419`  | brak lub nieaktualny token CSRF                                                   |
+| `422`  | walidacja, konflikt terminu, złe dane logowania lub odmowa anulowania             |
+| `429`  | limit żądań                                                                       |
+
+Błędy mają postać `{ "message": "..." }`, a odpowiedzi 422 dodają `"errors": { "pole": ["komunikat"] }`.
+
+## Decyzje techniczne
+
+**Blokada wiersza auta.** Nakładających się przedziałów dat nie da się wyrazić indeksem unikalnym, więc baza sama nie odrzuci podwójnej rezerwacji. Blokada auta ustawia równoczesne żądania w kolejce. Samo `lockForUpdate()` niczego nie dowodzi, dlatego osobny test na MySQL uruchamia dwa prawdziwe procesy na ten sam termin i oczekuje dokładnie jednej rezerwacji.
+
+**Przedziały półotwarte.** Przy `[start, end)` zwrot i odbiór tego samego dnia nie kolidują, a liczba dób to po prostu różnica dat.
+
+**Ceny w groszach, ze snapshotem.** Liczby całkowite dają dokładną arytmetykę. Snapshot chroni stare rezerwacje przed zmianą, a oczekiwana stawka sprawia, że nikt nie zapłaci ceny, której nie widział.
+
+**Sesje Sanctum zamiast tokenów.** Sesja jest w ciasteczku httpOnly, więc skrypty na stronie nie mają dostępu do poświadczeń. Tokeny bearer są całkowicie wyłączone.
+
+**Loadery routera zamiast biblioteki do pobierania danych.** TanStack Router obsługuje już ładowanie, anulowanie i przeładowanie danych strony, więc TanStack Query byłby tu drugą warstwą robiącą to samo.
+
+**`fetch` zamiast axios.** Jedyny moduł transportu potrzebuje tylko ciasteczek, nagłówka XSRF i typowanych błędów.
+
+## Bezpieczeństwo
+
+- Sesja w ciasteczku httpOnly i SameSite=Lax; każdy zapis wymaga tokenu CSRF.
+- Limity: logowanie 5 na minutę dla pary e-mail i IP, rejestracja 3 na minutę z jednego IP.
+- Polityka pozwala anulować rezerwację tylko właścicielowi.
+- CORS dopuszcza tylko `FRONTEND_URL`.
+- Zasoby JSON jawnie wymieniają swoje pola, a 404 nie ujawnia nazw klas modeli.
+- Przekierowania po logowaniu przechodzą przez listę dozwolonych lokalnych ścieżek.
+- Dane karty zostają w przeglądarce.
+
+## Znane ograniczenia
+
+- Płatność jest symulowana, więc nie ma prawdziwego obciążenia ani zwrotu.
+- Jeden oddział wypożyczalni i stała stawka dobowa dla auta.
+- Parametr potwierdzenia `?booked=` zostaje w URL po odświeżeniu.
 
 ## Scenariusz demo
 
@@ -120,12 +308,14 @@ Błędy: 401 brak sesji, 403 cudza rezerwacja, 404 brak rekordu, 409 zmieniona s
 
 ## Testy i kontrola jakości
 
-Testy backendu działają na MySQL, w bazie `testing` Saila. Na SQLite zachowanie dat, transakcji i blokad nie byłoby wiarygodne.
+100 testów backendu i 142 testy frontendu. Testy backendu działają na MySQL, w bazie `testing` Saila, bo na SQLite zachowanie dat, transakcji i blokad nie byłoby wiarygodne. Testy frontendu używają Vitesta i Testing Library, sieć mockuje MSW, a nieobsłużone żądanie wywraca test.
 
 ```bash
 ./vendor/bin/sail composer check   # Pint (zapisuje pliki), Larastan, Pest
 npm --prefix frontend run check    # Biome, TypeScript, Vitest, build
 ```
+
+Larastan działa na poziomie 6, bez baseline'u.
 
 ## Dalszy rozwój
 
