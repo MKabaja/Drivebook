@@ -4,14 +4,6 @@
 
 Rezerwacja aut jednej wypożyczalni: publiczny katalog z filtrem terminu, wycena konkretnego auta, checkout z symulowaną płatnością i lista własnych rezerwacji. Projekt portfolio fullstack: JSON API w Laravelu i SPA w React.
 
-## Zrzuty ekranu
-
-| Katalog | Szczegóły auta |
-| --- | --- |
-| ![Katalog przefiltrowany po terminie, miejscach i skrzyni](.github/screenshots/catalogue.jpg) | ![Szczegóły auta z ceną za wybrany termin](.github/screenshots/car-details.jpg) |
-| **Checkout** | **Moje rezerwacje** |
-| ![Checkout z formularzem płatności demo](.github/screenshots/checkout.jpg) | ![Lista potwierdzonych i anulowanych rezerwacji](.github/screenshots/bookings.jpg) |
-
 ## Funkcje
 
 - Publiczny katalog z filtrami terminu, minimalnej liczby miejsc i skrzyni. Filtry i paginacja są w URL.
