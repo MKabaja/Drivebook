@@ -2,9 +2,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { type FormEvent, useState } from 'react';
 
 import { Field } from '@/shared/components/field/field';
-import { uiStyles } from '@/shared/components/ui.styles';
 import { BOOKING_HORIZON_DAYS, MAX_RENTAL_DAYS } from '@/shared/config';
 import { addDays } from '@/shared/lib/add-days';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import {
 	findRentalDatesError,
 	type RentalDateField,

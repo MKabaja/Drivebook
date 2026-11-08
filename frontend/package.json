@@ -1,5 +1,6 @@
 {
-  "name": "frontend",
+  "name": "drivebook-frontend",
+  "description": "DriveBook car rental booking SPA: React, TanStack Router and Tailwind.",
   "private": true,
   "version": "0.0.0",
   "type": "module",

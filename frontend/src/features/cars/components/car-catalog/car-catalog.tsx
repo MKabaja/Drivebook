@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
 
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import type { CarPage } from '@/features/cars/api/cars.api';
 import { CarCard } from '@/features/cars/components/car-card/car-card';
 import type { CarSearch } from '@/features/cars/model/car-search.schemas';

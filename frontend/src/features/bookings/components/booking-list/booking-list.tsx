@@ -8,7 +8,7 @@ import { CalendarDays } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import {
 	type BookingPage,
 	cancelBooking,

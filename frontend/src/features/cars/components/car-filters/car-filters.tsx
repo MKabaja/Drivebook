@@ -3,13 +3,13 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 
 import { Field } from '@/shared/components/field/field';
-import { uiStyles } from '@/shared/components/ui.styles';
 import {
 	BOOKING_HORIZON_DAYS,
 	MAX_RENTAL_DAYS,
 	PICKUP_TIME,
 } from '@/shared/config';
 import { addDays } from '@/shared/lib/add-days';
+import { uiStyles } from '@/shared/styles/ui.styles';
 import {
 	findRentalDatesError,
 	type RentalDatesError,
@@ -37,7 +37,7 @@ type FiltersDraft = {
 };
 
 function CarFilters({ search, today }: CarFiltersProps) {
-	const { panel, label, input, primary } = uiStyles;
+	const { panel, fieldLabel, input, primary } = uiStyles;
 	const { form, heading, grid, footer, clearLink } = carFiltersStyles;
 	const navigate = useNavigate();
 	const urlValues = toCarFilters(search);
@@ -101,7 +101,7 @@ function CarFilters({ search, today }: CarFiltersProps) {
 					onChange={(event) => updateValue('ends_on', event.target.value)}
 					error={error?.field === 'ends_on' ? error.message : undefined}
 				/>
-				<label className={label}>
+				<label className={fieldLabel}>
 					Seats
 					<select
 						name="seats"
@@ -117,7 +117,7 @@ function CarFilters({ search, today }: CarFiltersProps) {
 						))}
 					</select>
 				</label>
-				<label className={label}>
+				<label className={fieldLabel}>
 					Transmission
 					<select
 						name="transmission"

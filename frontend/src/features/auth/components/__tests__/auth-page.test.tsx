@@ -37,10 +37,11 @@ describe('login', () => {
 		expect(screen.getByRole('button', { name: 'Sign in' })).toHaveFocus();
 	});
 
-	it('shows the user in the header and goes home after signing in', async () => {
+	it('shows the user in the header and goes to the car catalog after signing in', async () => {
 		const driver = makeUser({ name: 'Anna Driver' });
 		server.use(
 			http.post('/api/login', () => HttpResponse.json(resource(driver))),
+			emptyCatalog(),
 		);
 		const { router, user } = renderApp('/login');
 
@@ -51,7 +52,7 @@ describe('login', () => {
 		expect(
 			screen.getByRole('button', { name: 'Sign out' }),
 		).toBeInTheDocument();
-		expect(router.state.location.pathname).toBe('/');
+		expect(router.state.location.pathname).toBe('/cars');
 	});
 
 	it('goes to the requested page after signing in', async () => {
@@ -92,6 +93,7 @@ describe('login', () => {
 				await response.promise;
 				return HttpResponse.json(resource(makeUser()));
 			}),
+			emptyCatalog(),
 		);
 		const { user } = renderApp('/login');
 
@@ -119,6 +121,7 @@ describe('login', () => {
 				calls.push('login');
 				return HttpResponse.json(resource(makeUser()));
 			}),
+			emptyCatalog(),
 		);
 		const { user } = renderApp('/login');
 
@@ -192,6 +195,7 @@ describe('registration', () => {
 					status: 201,
 				});
 			}),
+			emptyCatalog(),
 		);
 		const { user } = renderApp('/register');
 
@@ -256,3 +260,7 @@ describe('sign out', () => {
 		expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 	});
 });
+
+function emptyCatalog() {
+	return http.get('/api/cars', () => HttpResponse.json(page([])));
+}

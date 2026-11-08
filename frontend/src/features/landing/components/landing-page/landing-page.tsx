@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { ArrowUpRight, CalendarCheck, CarFront, Clock3 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 
-import { uiStyles } from '@/shared/components/ui.styles';
+import { uiStyles } from '@/shared/styles/ui.styles';
 
 import { landingPageStyles } from './landing-page.styles';
 

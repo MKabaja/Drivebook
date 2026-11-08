@@ -26,6 +26,7 @@ src/
 │   ├── api/                     backend.ts, http-error.ts, network-error.ts, envelopes.ts (resourceOf, pageOf)
 │   ├── components/<name>/       ogólne UI bez wiedzy o domenie
 │   ├── lib/                     czyste funkcje ogólne (format-price, warsaw-date)
+│   ├── styles/ui.styles.ts      wspólne klasy Tailwinda (przyciski, pola, panele) dla wielu feature'ów
 │   └── config.ts                wszystkie stałe i limity
 ├── styles/                      app.css, theme.css, global.css
 └── test/                        setup.ts, factories/<res>.factory.ts

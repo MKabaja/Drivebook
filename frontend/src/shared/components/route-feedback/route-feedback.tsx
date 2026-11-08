@@ -5,8 +5,8 @@ import {
 } from '@tanstack/react-router';
 
 import { HttpError } from '@/shared/api/http-error';
-import { uiStyles } from '@/shared/components/ui.styles';
 import { describeError } from '@/shared/lib/describe-error';
+import { uiStyles } from '@/shared/styles/ui.styles';
 
 const { shell, page, title, lead, primary, secondary } = uiStyles;
 
