@@ -4,6 +4,14 @@
 
 Car rental booking for a single rental company: a public catalogue with date filters, per-car pricing, a checkout with a simulated payment, and a list of your own bookings. Built as a fullstack portfolio project, with a Laravel JSON API and a React SPA.
 
+## Screenshots
+
+| Catalogue | Car details |
+| --- | --- |
+| ![Catalogue filtered by dates, seats and transmission](.github/screenshots/catalogue.jpg) | ![Car details with the price for the chosen dates](.github/screenshots/car-details.jpg) |
+| **Checkout** | **My bookings** |
+| ![Checkout with the demo payment form](.github/screenshots/checkout.jpg) | ![List of confirmed and cancelled bookings](.github/screenshots/bookings.jpg) |
+
 ## Features
 
 - Public catalogue filtered by rental dates, minimum seats and transmission. Filters and pagination live in the URL.
