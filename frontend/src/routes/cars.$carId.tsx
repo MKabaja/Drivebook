@@ -3,38 +3,18 @@ import { createFileRoute, notFound, redirect } from '@tanstack/react-router';
 import { HttpError } from '@/shared/api/http-error';
 import { RouteError } from '@/shared/components/route-feedback/route-feedback';
 import { toWarsawDate } from '@/shared/lib/to-warsaw-date';
-import { ReserveAction } from '@/features/bookings/components/reserve-action/reserve-action';
 import { fetchCar } from '@/features/cars/api/cars.api';
-import {
-	CarDetails,
-	type ReserveActionSlot,
-} from '@/features/cars/components/car-details/car-details';
+import { CarDetails } from '@/features/cars/components/car-details/car-details';
 import { keepValidRentalDates } from '@/features/cars/lib/keep-valid-rental-dates';
 import { parseCarId } from '@/features/cars/lib/parse-car-id';
 import { carSearchSchema } from '@/features/cars/model/car-search.schemas';
 
 function CarRoute() {
-	const car = Route.useLoaderData();
-
-	function renderReserveAction({
-		price,
-		focusPriceSummary,
-	}: ReserveActionSlot) {
-		return (
-			<ReserveAction
-				carId={car.id}
-				price={price}
-				focusPriceSummary={focusPriceSummary}
-			/>
-		);
-	}
-
 	return (
 		<CarDetails
-			car={car}
+			car={Route.useLoaderData()}
 			search={Route.useSearch()}
 			today={toWarsawDate(new Date())}
-			renderReserveAction={renderReserveAction}
 		/>
 	);
 }

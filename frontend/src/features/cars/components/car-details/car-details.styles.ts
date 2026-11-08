@@ -10,6 +10,7 @@ const carDetailsStyles = {
 	unit: 'ml-1 text-base font-normal text-muted',
 	booking: 'mt-8 space-y-5',
 	bookingTitle: 'text-lg font-medium',
+	checkoutAction: 'grid gap-3',
 	dateForm: 'grid gap-4',
 	dateFields: 'grid gap-4 sm:grid-cols-2',
 	hint: 'text-sm leading-6 text-muted',

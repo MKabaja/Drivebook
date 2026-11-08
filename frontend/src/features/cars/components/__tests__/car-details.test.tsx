@@ -165,4 +165,22 @@ describe('car details', () => {
 			),
 		).toBeInTheDocument();
 	});
+
+	it('links an available car with dates to the checkout for the same dates', async () => {
+		server.use(
+			http.get('/api/cars/3', () =>
+				HttpResponse.json(
+					resource(makeCar({ price: makeRentalPrice(), is_available: true })),
+				),
+			),
+		);
+		renderApp('/cars/3?starts_on=2026-11-10&ends_on=2026-11-13');
+
+		expect(
+			await screen.findByRole('link', { name: 'Continue to checkout' }),
+		).toHaveAttribute(
+			'href',
+			'/cars/3/checkout?starts_on=2026-11-10&ends_on=2026-11-13',
+		);
+	});
 });
