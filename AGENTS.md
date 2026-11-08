@@ -1,6 +1,6 @@
 # DriveBook
 
-Portfolio junior fullstack: rezerwacja aut jednej wypożyczalni. DriveBook całkowicie zastępuje dawny RoomBook (sale) — w kodzie, schemacie, testach i dokumentacji nie zostaje po nim śladu; nazwa katalogu/repo zmieni się na końcu refaktoru. Plan i bieżący task: `docs/plan-refaktoru.md`.
+Portfolio junior fullstack: rezerwacja aut jednej wypożyczalni.
 Stack: Laravel 13 + PHP ^8.5, Sanctum 4 (sesyjne SPA), MySQL 8.4, Pest 4, Larastan (poziom 6), Pint. Frontend w `frontend/`: React 19 + TypeScript 6 strict, Vite 8, Tailwind 4, TanStack Router (file-based), Zod 4, Biome 2, Vitest + Testing Library, Lucide, Motion.
 Celowo bez: Prettier i ESLint (formatuje i lintuje tylko Biome), TanStack Query, axios, Redux/Zustand, React Hook Form, shadcn, cn/clsx/cva, bibliotek dat. Dodanie którejkolwiek wymaga zgody.
 
@@ -34,9 +34,9 @@ Frontend (Node 24 z `frontend/.nvmrc`):
 ## Współpraca
 
 - Odpowiadaj po polsku, krótko i konkretnie. Wyjaśniaj decyzje tak, aby autor potrafił obronić kod na rozmowie rekrutacyjnej.
-- Refaktor DriveBook: kod pisze agent, autor robi review. Jeden task z planu na raz → weryfikacja → pokazanie diffu i komunikatu commita → stop. Nowe funkcje spoza planu: najpierw zapytaj, kto pisze.
+- Kod pisze agent, autor robi review. Jeden task na raz → weryfikacja → pokazanie diffu i komunikatu commita → stop. Nowe funkcje: najpierw zapytaj, kto pisze.
 - Realizuj zlecony zakres. Bez refaktorów poza taskiem, abstrakcji na zapas, kopiowania architektury Next.js z Linkera.
-- Na starcie sesji: pamięć projektu (Claude ładuje sama; inni agenci: `.ai/memory/MEMORY.md`) i aktualny task w `docs/plan-refaktoru.md`. Postęp i decyzje zapisuj w pamięci, bez sekretów.
+- Na starcie sesji: pamięć projektu (Claude ładuje sama; inni agenci: `.ai/memory/MEMORY.md`). Postęp i decyzje zapisuj w pamięci, bez sekretów.
 
 ## Architektura — backend
 
@@ -82,10 +82,10 @@ Frontend (Node 24 z `frontend/.nvmrc`):
   - bez podpisów i trailerów: `Co-Authored-By`, `Signed-off-by`, „Generated with…”;
   - bez nazwy, ID ani linku sesji (np. `Session: …`, `session_…`, `claude.ai/code/…`, nazwa wątku/rozmowy);
   - bez wzmianek o agentach, modelach, Codexie, Claude, skillach i `AGENTS.md`/`CLAUDE.md`.
-- Nie używaj `git stash`, `reset --hard`, `checkout -- <plik>` ani `clean` na niezacommitowanych zmianach bez zgody — w drzewie roboczym leży kod w trakcie przebudowy.
+- Nie używaj `git stash`, `reset --hard`, `checkout -- <plik>` ani `clean` na niezacommitowanych zmianach bez zgody.
 
 ## Wspólne zasoby agentów
 
 - Skille, agenci i komendy: repo `claude-config` (Claude — globalnie przez `~/.claude`; inni agenci — `.ai/shared/skills/<nazwa>/SKILL.md`, `.agents/skills`). Podłączenie na nowym komputerze: `bash scripts/connect-agents.sh [ścieżka/do/claude-config]`.
 - Reguły ścieżkowe `.claude/rules/*.md` obowiązują wszystkich agentów — inni niż Claude czytają je ręcznie przed pracą w danym obszarze.
-- Nie edytuj zasobów `claude-config` w ramach zadań RoomBooka; wolno tylko pamięć `memory/roombook/`.
+- Nie edytuj zasobów `claude-config` w ramach zadań DriveBooka; wolno tylko pamięć `memory/drivebook/`.

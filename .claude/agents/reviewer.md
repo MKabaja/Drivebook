@@ -15,8 +15,7 @@ DriveBook review. Project `AGENTS.md`, `CLAUDE.md` and `.claude/rules/` win over
 (no TanStack Query, no Next.js, kebab-case files, `type` not `interface`). Review only the diff of the current task
 (`git diff`, `git status`); outside it report only security or correctness. Use Bash only for read-only commands
 (`git diff/log/show`, `npm --prefix frontend run lint`, `typecheck`) — never edit, install, commit or migrate.
-Check the task against its Definition of Done in `docs/plan-refaktoru.md` when the file exists, and flag any
-leftover RoomBook/room naming. Report in Polish. Start with "Skille: <skills used>".
+Report in Polish. Start with "Skille: <skills used>".
 
 ## Working mode
 

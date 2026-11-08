@@ -20,7 +20,7 @@ Pełny standard: skille `laravel-clean-code` i `php-clean-code`. Ten plik wygryw
 - Transakcja: `DB::transaction` w serwisie; blokada `Car::lockForUpdate()` przed sprawdzeniem konfliktów; żadnych zewnętrznych wywołań w transakcji.
 - Błędy domenowe jako własne wyjątki (`app/Exceptions/`) renderowane w `bootstrap/app.php` → `withExceptions`; walidacyjne konflikty jako `ValidationException` (422).
 - Stałe domeny (`Europe/Warsaw`, 10:00, okno alternatyw, maks. długość wynajmu, rozmiary stron) w `config/rental.php`, czytane przez `config()`; daty przez `CarbonImmutable` w strefie z configu.
-- Migracje: schemat DriveBook od zera (cars, bookings) — bez tabel i kolumn po salach. Nowa zmiana schematu = nowa migracja, gdy migracje trafią do `main`.
+- Migracje: zmiana schematu = nowa migracja, bez edycji istniejących.
 - Seedery: dane demo aut z lokalnymi zdjęciami; bez duplikatów, bez danych osobowych.
 - Bez nowych pakietów (Rector, PHPat, Boost, spatie/*) bez zgody.
 
