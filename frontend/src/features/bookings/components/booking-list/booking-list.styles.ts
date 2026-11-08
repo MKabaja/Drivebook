@@ -12,7 +12,7 @@ const bookingListStyles = {
 	carName: 'text-xl font-semibold tracking-tight',
 	badgeBase: 'rounded-full px-3 py-1 text-xs font-medium',
 	dates: 'mt-3 text-sm text-muted',
-	total: 'text-right text-xl font-semibold',
+	total: 'ml-auto text-right text-xl font-semibold',
 	breakdown: 'mt-1 block text-xs font-normal text-muted',
 	footer:
 		'mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-4',
